@@ -1,91 +1,133 @@
-const { User } = require('../models/User');
+// resolvers.js
+
+const { User, Post, Comment, Like } = require('../models');
 const { signToken } = require('../utils/auth');
-const { AuthenticationError } = require('apollo-server-errors');
 
-// Set up the resolver functions for the types defined in the typeDefs.js file.
 const resolvers = {
-    // Query: {
-    //     // Me returns a User type, which is defined in typeDefs.js
-    //     me: async (parent, args, context) => {
-    //         console.log('Route hit', context);
-    //         if (context.user) {
-    //             const userData = await User.findOne({ _id: context.user._id })
-    //                 .select('-__v -password')
-    //                 .populate('savedBooks');
+  Query: {
+    me: async (parent, args, context) => {
+      if (context.user) {
+        const userData = await User.findOne({ _id: context.user._id })
+          .select('-__v -password')
+          .populate('posts')
+          .populate('comments')
+          .populate('likes');
 
+        return userData;
+      }
 
+      throw new AuthenticationError('Not logged in');
+    },
+    users: async () => {
+      return User.find()
+        .select('-__v -password')
+        .populate('posts')
+        .populate('comments')
+        .populate('likes');
+    },
+    user: async (parent, { username }) => {
+      return User.findOne({ username })
+        .select('-__v -password')
+        .populate('posts')
+        .populate('comments')
+        .populate('likes');
+    },
+    posts: async (parent, { username }) => {
+      const params = username ? { username } : {};
+      return Post.find(params).sort({ createdAt: -1 });
+    },
+    post: async (parent, { _id }) => {
+      return Post.findOne({ _id });
+    },
+  },
 
-    //             return userData;
-    //         }
+  Mutation: {
+    addUser: async (parent, args) => {
+      const user = await User.create(args);
+      const token = signToken(user);
 
-    //         throw new AuthenticationError('Not logged in');
-    //     },
-    // },
+      return { token, user };
+    },
+    login: async (parent, { email, password }) => {
+      const user = await User.findOne({ email });
 
-    // Mutation: {
-    //     // Set up mutations to handle creating a user, logging a user in, saving a book, and removing a book.
-    //     addUser: async (parent, args) => {
-    //         // user grabs the args from the mutation
-    //         const user = await User.create(args);
-    //         const token = signToken(user);
+      if (!user) {
+        throw new AuthenticationError('Incorrect credentials');
+      }
 
-    //         // return an object that contains the token and a user object
-    //         return { token, user };
-    //     },
+      const correctPw = await user.isCorrectPassword(password);
 
-    //     login: async (parent, { email, password }) => {
-    //         // user grabs the args from the mutation
-    //         const user = await User.findOne({ email });
+      if (!correctPw) {
+        throw new AuthenticationError('Incorrect credentials');
+      }
 
-    //         if (!user) {
-    //             throw new AuthenticationError('Incorrect credentials');
-    //         }
+      const token = signToken(user);
+      return { token, user };
+    },
+    addPost: async (parent, args, context) => {
+      if (context.user) {
+        const post = await Post.create({ ...args, username: context.user.username });
 
-    //         // check if the password is correct
-    //         const correctPw = await user.isCorrectPassword(password);
+        await User.findByIdAndUpdate(
+          { _id: context.user._id },
+          { $push: { posts: post._id } },
+          { new: true }
+        );
 
-    //         if (!correctPw) {
-    //             throw new AuthenticationError('Incorrect credentials');
-    //         }
+        return post;
+      }
 
-    //         // return an object that contains the token and a user object
-    //         const token = signToken(user);
-    //         return { token, user };
-    //     },
+      throw new AuthenticationError('You need to be logged in!');
+    },
+    addComment: async (parent, { postId, content }, context) => {
+      if (context.user) {
+        const comment = await Comment.create({
+          content,
+          username: context.user.username
+        });
 
-    //     saveBook: async (parent, bookData, context) => {
-    //        // if user is logged in and valid
-    //         if (context.user) {
-                
-    //             // updatedUser grabs the args from the mutation
-    //             const updatedUser = await User.findOneAndUpdate(
-    //                 { _id: context.user._id },
-    //                 { $push: { savedBooks: bookData } },
-    //                 { new: true, runValidators: true }
-    //             );
-    //             // return the updated user
-    //             return updatedUser;
-    //         }
+        await Post.findByIdAndUpdate(
+          { _id: postId },
+          { $push: { comments: comment._id } },
+          { new: true }
+        );
 
-    //         throw new AuthenticationError('You need to be logged in!');
-    //     },
+        return comment;
+      }
 
-    //     // removeBook takes in a bookId as an argument
-    //     removeBook: async (parent, { bookId }, context) => {
-    //         if (context.user) {
-    //             // updatedUser grabs the args from the mutation
-    //             const updatedUser = await User.findOneAndUpdate(
-    //                 { _id: context.user._id },
-    //                 { $pull: { savedBooks: { bookId: bookId } } },
-    //                 { new: true }
-    //             );
+      throw new AuthenticationError('You need to be logged in!');
+    },
+    addLike: async (parent, { postId }, context) => {
+      if (context.user) {
+        const like = await Like.create({ username: context.user.username });
 
-    //             return updatedUser;
-    //         }
+        await Post.findByIdAndUpdate(
+          { _id: postId },
+          { $push: { likes: like._id } },
+          { new: true }
+        );
 
-    //         throw new AuthenticationError('You need to be logged in!');
-    //     },
-    // },
+        return like;
+      }
+
+      throw new AuthenticationError('You need to be logged in!');
+    },
+    deletePost: async (parent, { postId }, context) => {
+      if (context.user) {
+        const post = await Post.findByIdAndDelete({ _id: postId });
+
+        await User.findByIdAndUpdate(
+          { _id: context.user._id },
+          { $pull: { posts: post._id } },
+          { new: true }
+        );
+
+        return post;
+      }
+
+      throw new AuthenticationError('You need to be logged in!');
+    },
+  },
 };
 
 module.exports = resolvers;
