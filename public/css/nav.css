@@ -1,0 +1,63 @@
+.navbar {
+    background-color: #f8f9fa;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand {
+    margin-left: 1rem;
+}
+
+.nav-icon {
+    height: 40px;
+}
+
+.profile-pic {
+    width: 50px; 
+    height: 50px;
+    object-fit: cover; 
+    border-radius: 50%; 
+}
+
+
+.navbar-item {
+    margin-right: 1rem;
+}
+
+.navbar-menu {
+    list-style: none;
+    display: flex;
+    align-items: center;
+}
+
+.navbar-link {
+    color: #333;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.navbar-link:hover {
+    color: #007bff;
+}
+
+.dropdown-item {
+    color: #333;
+}
+
+.dropdown-item:hover {
+    color: #007bff;
+    background-color: #f8f9fa;
+}
+
+.dropdown-item.disabled {
+    color: #6c757d;
+}
+
+.logout-btn {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    color: #262626;
+    padding: 14px;
+    font-weight: 500;
+}

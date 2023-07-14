@@ -1,0 +1,135 @@
+body {
+    background-color: #f8f9fa;
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    margin-top: 50px;
+}
+
+
+.user-name, .user-email {
+    margin-top: 10px;
+    color: #333;
+}
+
+.user-name {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.user-email {
+    font-size: 18px;
+}
+
+
+.settings-form {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.settings-form .form-label {
+    font-size: 18px;
+    color: #333;
+    font-weight: bold;
+}
+
+.settings-form .form-control {
+    border-radius: 0;
+    height: 50px;
+    font-size: 16px;
+}
+
+.settings-form .btn {
+    background-color: #007bff;
+    border-color: #007bff;
+    color: #fff;
+    font-size: 18px;
+    padding: 10px 30px;
+    border-radius: 0;
+}
+
+.settings-form .btn:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+.profile-picture-frame {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin: auto;
+}
+
+.profile-picture-frame img {
+    width: 100%;
+    height: 100%;
+}
+
+#upload-picture {
+    display: block;
+    margin: 10px auto;
+}
+
+#update-picture {
+    display: block;
+    width: 100px;
+    margin: 10px auto;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#update-picture:hover {
+    background-color: #0056b3;
+}
+
+.card {
+    background: #ffffff;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    transition: 0.3s;
+    margin: 15px;
+    border-radius: 5px; 
+    padding: 20px;
+  }
+  
+  .card:hover {
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+  }
+
+  .coming-soon-card {
+    position: relative;
+  }
+  
+  .coming-soon-card .card {
+    filter: blur(5px);
+  }
+  
+  .coming-soon-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.8);
+    color: black;
+    font-size: 1.5em;
+    text-align: center;
+  }
+  
+  
+
+  
+
+
+

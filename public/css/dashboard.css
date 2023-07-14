@@ -1,0 +1,139 @@
+body {
+    background-color: #f5f8fa;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    margin: 5px;
+    width: 90%;
+}
+
+.col-8, .col-4 {
+    padding: 0 1rem;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: none;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    transition: 0.3s;
+    margin-bottom: 20px;
+    border-radius: 10px;
+}
+
+.card:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+.card-body {
+    padding: 15px 10px;
+    width: 100%;
+}
+
+.card-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.card-text {
+    font-size: 15px;
+}
+
+.card .btn {
+    font-size: 14px;
+    padding: 5px 10px;
+    margin-right: 0.5rem;
+}
+
+.btn-primary {
+    background-color: #1da1f2;
+    border-color: #1da1f2;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+
+.btn-success {
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+.like-button {
+    background-color: rgb(86, 165, 185);
+    
+}
+
+.like-button.liked {
+    background-color: red;
+   
+}
+
+.comments {
+    display: none;
+    max-height: 100px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.comment-input.show-input {
+    display: flex;
+}
+
+.show-comments {
+    display: block; 
+}
+
+.comment-input {
+    display: none;
+    width: 100%;
+    padding: 0.5rem;
+    margin: 0.5rem 0;
+    border: none; 
+    border-bottom: 1px solid #dbdbdb; 
+    border-radius: 0px; 
+    box-sizing: border-box;
+    background-color: #fafafa; 
+    color: #262626; 
+    font-size: 14px;
+}
+  
+
+ 
+  
+
+
+@media screen and (max-width: 768px) {
+    .container {
+        max-width: none;
+        width: 100%;
+        padding: 0.5rem;
+    }
+
+    .col-8, .col-4 {
+        padding: 0;
+    }
+
+    .card {
+        width: 100%;
+        margin: 0.5rem;
+    }
+}
