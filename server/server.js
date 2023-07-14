@@ -4,7 +4,7 @@ const { ApolloServer } = require('apollo-server-express');
 const { typeDefs, resolvers } = require('./schemas');
 const db = require('./config/connection');
 const jwt = require('jsonwebtoken');
-const { User } = require('./models');
+const { User } = require('./models/User');
 
 // set up express app
 const app = express();
