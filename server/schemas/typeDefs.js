@@ -1,39 +1,60 @@
+// typeDefs.js
+
 const { gql } = require('apollo-server-express');
 
-// Define the query and mutation functionality to work with the Mongoose models.
-// const typeDefs = gql`
-//   type Book {
-//     authors: [String]
-//     description: String
-//     bookId: String
-//     image: String
-//     link: String
-//     title: String
-//   }
+const typeDefs = gql`
+  type User {
+    _id: ID
+    username: String
+    email: String
+    date_of_birth: String
+    password: String
+    profile_picture: String
+    posts: [Post]
+  }
 
-//   type User {
-//     _id: ID
-//     username: String
-//     email: String
-//     bookCount: Int
-//     savedBooks: [Book]
-//   }
+  type Post {
+    _id: ID
+    content: String
+    createdAt: String
+    username: String
+    comments: [Comment]
+    likes: [Like]
+  }
 
-//   type Auth {
-//     token: ID!
-//     user: User
-//   }
+  type Comment {
+    _id: ID
+    content: String
+    createdAt: String
+    username: String
+  }
 
-//   type Query {
-//     me: User
-//   }
+  type Like {
+    _id: ID
+    username: String
+  }
 
-//   type Mutation {
-//     login(email: String!, password: String!): Auth
-//     addUser(username: String!, email: String!, password: String!): Auth
-//     saveBook(authors: [String]!, description: String!, title: String!, bookId: String!, image: String, link: String): User
-//     removeBook(bookId: String!): User
-//   }
-// `;
+  type Auth {
+    token: ID!
+    user: User
+  }
+
+  type Query {
+    me: User
+    users: [User]
+    user(username: String!): User
+    posts: [Post]
+    post(_id: ID!): Post
+  }
+
+  type Mutation {
+    login(email: String!, password: String!): Auth
+    addUser(username: String!, email: String!, date_of_birth: String!, password: String!, profile_picture: String): Auth
+    addPost(content: String!): Post
+    addComment(postId: ID!, content: String!): Post
+    addLike(postId: ID!): Post
+    deletePost(postId: ID!): User
+  }
+`;
 
 module.exports = typeDefs;
