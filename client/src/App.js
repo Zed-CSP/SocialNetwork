@@ -1,9 +1,9 @@
 import * as THREE from 'three';
-import React,{ useState, useRef} from 'react'
+import React,{ useState, useRef, useEffect} from 'react'
 import { Canvas, useFrame} from '@react-three/fiber';
 import './App.css';
 import { Scroll, ScrollControls} from '@react-three/drei';
-import { Inter, Login, Register} from './components';
+import { Inter, Login, Register, Profile} from './components';
 import { Points, PointMaterial } from '@react-three/drei'
 import * as random from 'maath/random/dist/maath-random.esm'
 import { Avatar } from "@mui/material";
@@ -32,14 +32,15 @@ function Stars(props) {
   )
 }
 
-const settings = ['Profile', 'Settings', 'Logout'];
+// const [settings, setSettings] = useState(['Profile', 'Settings', 'Logout']);
 
 
 function App() {
+  const [settings, setSettings] = useState(['Profile', 'Settings', 'Logout']);
   const [view, setView] = useState(0);
-  const components = [<Login/>, <Inter/>, <Register />];
+  // const components = [<Login/>, <Inter/>, <Register />];
   const [anchorElUser, setAnchorElUser] = useState(null);
-    
+  const [currentComponent, setComponent] = useState(<Login />);
   const handleOpenUserMenu = (event) => {
       setAnchorElUser(event.currentTarget);
   };
@@ -48,19 +49,35 @@ function App() {
       setAnchorElUser(null);
   };
 
+  useEffect(() => {
+    if (currentComponent && currentComponent.type === Login) {
+      setSettings(['Register', 'Login']);
+    } else {
+      setSettings(['Profile', 'Settings', 'Logout']);
+    }
+  }, [currentComponent]);
+
   const handleSettingClick = (setting) => {
       // Perform different actions based on the setting
       if (setting === 'Profile') {
         // Handle Profile setting
-        console.log('Clicked on Profile');
+        setComponent(<Profile />);
+        
       } else if (setting === 'Settings') {
         // Handle Settings setting
-        console.log('Clicked on Settings');
+        setComponent();
       } else if (setting === 'Logout') {
         // Handle Logout setting
-
-        console.log('Clicked on Logout');
+        setComponent(<Login />);
       }
+      else if(setting === 'Register'){
+        setComponent(<Register />);
+      }
+      else if (setting === 'Login') {
+        
+        setComponent(<Login />);
+      }
+      setAnchorElUser(null);
     };
   
 
@@ -73,7 +90,7 @@ function App() {
           <Stars/>
           
           <Scroll html>
-            <div className={`h-screen w-screen p-8 max-w-screen-2xl mx-auto `}>
+            <div className={`h-screen w-screen p-8 mx-auto `}>
             
           <Box
       sx={{
@@ -88,12 +105,21 @@ function App() {
           },
           margin: '5%',
         }}
-      >
-          
-          
+        >
           <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}><Avatar/></IconButton>
-          <IconButton color="primary" onClick={() => setView(0)}><MailIcon/></IconButton>
-          <IconButton color="primary" onClick={() => setView(2)}><NotificationsNoneTwoToneIcon/></IconButton>
+          {currentComponent && currentComponent.type !== Login && (
+          <>
+          
+          <IconButton color="primary" ><MailIcon/></IconButton>
+          <IconButton color="primary" ><NotificationsNoneTwoToneIcon/></IconButton>
+            
+          </>
+          )}
+          {currentComponent && currentComponent.type === Login && null}
+            
+          
+           {/*<IconButton color="primary" onClick={() => setView(0)}><MailIcon/></IconButton>
+          <IconButton color="primary" onClick={() => setView(2)}><NotificationsNoneTwoToneIcon/></IconButton> */}
           <Menu
             sx={{ mt: '45px' }}
             id="menu-appbar"
@@ -117,9 +143,11 @@ function App() {
             ))}
           </Menu>
           
+          
       </Box>
             <div className='smContainer'>
-            {components[view]}
+            {/* {components[view]} */}
+            {currentComponent}
             </div>
 
             </div>
