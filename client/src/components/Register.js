@@ -17,9 +17,9 @@ export function Register() {
             }}
             >
                 <h1 style={{fontWeight: 'bolder', fontSize: '20px', paddingBottom: '5%'}}>Register</h1>
-                <TextField id="outlined-basic" label="Username" variant="outlined" />
-                <TextField id="outlined-basic" label="Password" variant="outlined" />
-                <TextField id="outlined-basic" label="Password" variant="outlined" />
+                <TextField id="filled-basic" label="Username" variant="filled" />
+                <TextField id="filled-basic" label="Password" variant="filled" />
+                <TextField id="filled-basic" label="Confirm Password" variant="filled" />
 
                 <Button style={{color:'black', marginTop: '10%'}} variant="contained" endIcon={<DoneIcon/>} color="success">Submit</Button>
             </Box>
