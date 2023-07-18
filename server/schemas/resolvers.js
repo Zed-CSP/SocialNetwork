@@ -74,39 +74,35 @@ const resolvers = {
       const token = signToken(user);
       return { token, user };
     },
-    addPost: async (parent, args, context) => {
+    addpost: async (parent, { postContent }, context) => {
       if (context.user) {
-        const post = await Post.create({ ...args, username: context.user.username });
-
-        await User.findByIdAndUpdate(
-          { _id: context.user._id },
-          { $push: { posts: post._id } },
-          { new: true }
-        );
-
-        return post;
-      }
-
-      throw new AuthenticationError('You need to be logged in!');
-    },
-    addComment: async (parent, { postId, content }, context) => {
-      if (context.user) {
-        const comment = await Comment.create({
-          content,
-          username: context.user.username
+        const gptResponse = await openai.Completion.create({
+          engine: "text-davinci-003",
+          prompt: postContent,
+          max_tokens: 1,
         });
-
-        await Post.findByIdAndUpdate(
-          { _id: postId },
-          { $push: { comments: comment._id } },
-          { new: true }
-        );
-
-        return comment;
+      const approvalStatus = parseInt(gptResponse.choices[0].text.trim());
+  
+        if (approvalStatus === 1) {
+          const post = await Post.create({ content: postContent, username: context.user.username });
+  
+          await User.findByIdAndUpdate(
+            { _id: context.user._id },
+            { $push: { posts: post._id } },
+            { new: true }
+          );
+  
+          return { message: "Post approved and added", post };
+        } else {
+          await User.updateOne(
+            { _id: context.user._id },
+            { $inc: { naughtyCount: 1 } },
+          );
+          throw new Error('Post not approved');
+        }
       }
-
-      throw new AuthenticationError('You need to be logged in!');
-    },
+    throw new AuthenticationError('You need to be logged in!');
+    },  
     addLike: async (parent, { postId }, context) => {
       if (context.user) {
         const like = await Like.create({ username: context.user.username });
@@ -137,11 +133,6 @@ const resolvers = {
 
       throw new AuthenticationError('You need to be logged in!');
     },
-    // approval: async (parent, { postId }, context) => {
-    //   // will prompt ai route to be called
-    //   // if respose is positive, then will update post
-    //   // if response is negative, then post will not be added to database, naughty counter up, and user will be notified
-    // }
   },
 };
 
