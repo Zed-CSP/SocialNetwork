@@ -5,7 +5,7 @@ import './css/HC.css'
 
 
 
-export function HomeCards () {
+export function Home () {
 
     
     return(
@@ -37,4 +37,4 @@ export function HomeCards () {
     );
 
 }
-export default HomeCards;
+export default Home;

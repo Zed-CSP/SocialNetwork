@@ -25,7 +25,10 @@ export function Register() {
             const { data } = await addUser({
                 variables: { username, email, date_of_birth: dateOfBirth, password },
             });
-            console.log(data);
+            
+            if(data.addUser.token){
+                window.location.replace("/home");
+            }
             // Handle successful registration (e.g. redirect to login page)
         } catch (err) {
             // Handle error (e.g. show error message)
