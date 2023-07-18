@@ -19,7 +19,7 @@ export function Profile() {
           
         }}
       >
-        <Paper elevation={3} sx={{ p: 2, flex:1 }} style={{   position: 'relative' }}>
+        <Paper elevation={3} sx={{ p: 2, flex:1 }} style={{   position: 'relative', backgroundColor: 'rgba(220, 220, 220, 0.5)' }}>
           <div style={{ display: 'flex', flexWrap: 'wrap', flexDirection:'column' ,alignItems: 'center', justifyContent: 'center', marginBottom: '16px' }}>
             {/* <img src={pro_img} alt="Profile Pic" style={{ width: '50vw', height: '30vh', borderRadius: '15px' }} /> */}
             <CardMedia sx={{ height: '30vh', width: '100%'}} image={pro_img} />

@@ -11,17 +11,19 @@ import CardMedia from '@mui/material/CardMedia';
 import ShareTwoToneIcon from '@mui/icons-material/ShareTwoTone';
 import placeholder from './img/in_img.png';
 import ReadMoreTwoToneIcon from '@mui/icons-material/ReadMoreTwoTone';
+import CloseFullscreenTwoToneIcon from '@mui/icons-material/CloseFullscreenTwoTone';
 
-export default function PostCard() {
+export default function CardExp() {
     return (
-      <div className='Car' >
+      <div className='CarEx' >
         
       <Card color='dark' style={{ position: 'relative', backgroundColor: 'rgba(220, 220, 220, 0.5)' }}>
-      <CardMedia
-        sx={{ height: '20vh', width: '30vw'}}
+    <div className='heading' style={{display: 'flex'}}>
+    <CardMedia
+        sx={{ height: '15vh', width: '10%' }}
         image={placeholder}
         
-      />
+        />
       
         {/* <iframe title="embed" 
             width={640} 
@@ -29,26 +31,31 @@ export default function PostCard() {
             src="https://www.hackerrank.com/" 
             /> */}
         
-      <a href='#' style={{ position: 'absolute', top: '2%', left:'2%', zIndex: 1 }}>
+        <a href='#' style={{ display: 'flex', alignSelf: 'end', marginLeft: '2%'}}>
             <Avatar alt='User' />
-            </a>
+        </a>
+        <Typography sx={{ fontSize: 14, display: 'flex', alignSelf: 'end', marginLeft: '2%', color: 'white' }} color="text.secondary" gutterBottom>
+            {'Username'}
+        </Typography>
+        <IconButton style={{color: 'blue', borderRadius: '50%', position: 'absolute', top: '20%', right:'2%', zIndex: 1}}><CloseFullscreenTwoToneIcon/></IconButton>
+
+    </div>
+    
+
         <CardContent>
           <div className='Tagz' >
-          <span style={{ cursor: 'pointer',color: 'white' }} >
+          <span style={{ cursor: 'pointer', color: 'white' }} >
               #tag1 #tag2 #tag3
             </span>
           </div>
+
           <div className='Desc' >
-          <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-            {'Username'}
-          </Typography>
-          
           <Typography variant="body2" color="text.secondary">
             
             <br />
             {'"Post Description"'}
           </Typography>
-            <IconButton style={{color:'blue', borderRadius: '50%'}}><ReadMoreTwoToneIcon/></IconButton>
+            
           </div>
         </CardContent>
         <CardActions style={{display: "flex", alignItems: "center", justifyContent: "center"}}>

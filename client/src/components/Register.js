@@ -60,7 +60,7 @@ export function Register() {
                     <TextField id="filled-basic" label="Confirm Password" variant="filled" type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
                     <TextField id="filled-basic" label="Date of Birth" variant="filled" type="date" InputLabelProps={{ shrink: true }} value={dateOfBirth} onChange={(e) => setDateOfBirth(e.target.value)} />
                    </div> 
-                   <Button style={{color:'black', marginTop: '10%'}} variant="contained" endIcon={<DoneIcon/>} color="success" type="submit">Submit</Button>
+                   <Button style={{color:'white', marginTop: '10%'}} variant="contained" endIcon={<DoneIcon/>} color="success" type="submit">Submit</Button>
                 
                 </form>
                 

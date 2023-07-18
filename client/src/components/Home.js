@@ -20,8 +20,8 @@ export function Home () {
             borderRadius: '15px',
             padding: '2%',
             margin: '1%',
-            height: '70vh',
-            width: '70vw',
+            height: '80vh',
+            width: '100vw',
             
             '& > :not(style)': {
               m: 4,
@@ -32,7 +32,7 @@ export function Home () {
           }}
         >
             
-        <div className='innerFeed' style={{position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', overflow: 'auto'}}>
+        <div className='innerFeed' style={{position: 'absolute', height: '70%',top: '50%', left: '50%', transform: 'translate(-50%, -50%)', overflow: 'auto'}}>
             {<PostCard/>}
         </div>
 
