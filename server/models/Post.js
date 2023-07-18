@@ -13,6 +13,10 @@ const PostSchema = new Schema({
     type: String,
     required: true,
   },
+  volume: {
+    type: Number,
+    default: 0,
+  },
   comments: [
     {
       type: Schema.Types.ObjectId,
