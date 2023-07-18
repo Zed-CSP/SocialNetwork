@@ -46,7 +46,7 @@ export function Register() {
                 margin: '2%',
                 paddingTop: '2%',
                 borderRadius: '15px',
-                backgroundColor: 'primary.dark',
+                backgroundColor: 'grey',
             }}
             >
                 <h1 style={{fontWeight: 'bolder', fontSize: '20px', paddingBottom: '5%'}}>Register</h1>

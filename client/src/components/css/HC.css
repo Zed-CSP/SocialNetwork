@@ -4,6 +4,7 @@
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
+    animation: fade-in-up 500ms ease-out forwards;
 }
 
 .Reg {
@@ -12,6 +13,7 @@
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
+    animation: fade-in-up 500ms ease-out forwards;
 }
 
 .Car {
@@ -19,6 +21,7 @@
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
+    animation: fade-in-up 500ms ease-out;
 }
 
 .Hom {
@@ -36,6 +39,7 @@
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
+    animation: fade-in-up 500ms ease-out;
 }
 
 .innerFeed {
@@ -52,6 +56,7 @@
     justify-content: end;
     margin: 2%;
     color:aliceblue;
+    animation: fade-in-down 500ms ease-out;
 }
 .Desc {
     background-color: lightgray;
@@ -71,3 +76,25 @@
     justify-items: center;
     
 } */
+
+@keyframes fade-in-up {
+    0% {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fade-in-down {
+    0% {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
