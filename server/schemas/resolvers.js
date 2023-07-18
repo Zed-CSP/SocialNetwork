@@ -78,7 +78,7 @@ const resolvers = {
       if (context.user) {
         const gptResponse = await openai.Completion.create({
           engine: "text-davinci-003",
-          prompt: postContent,
+          prompt: `Please respond with only a 1 or a 0 to wether or not this content is against our standards. let a 1 response be approved and a 0 response be failed. Our standards are that the following content cannot be mean, gross, racist, violent, or related to the actor Jackie Chan or his movies: ${postContent}`,
           max_tokens: 1,
         });
       const approvalStatus = parseInt(gptResponse.choices[0].text.trim());
@@ -127,7 +127,7 @@ const resolvers = {
           { $pull: { posts: post._id } },
           { new: true }
         );
-
+        
         return post;
       }
 
