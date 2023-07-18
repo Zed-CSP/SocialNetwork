@@ -3,7 +3,7 @@ import { useMutation } from '@apollo/client';
 import { Box, Button } from "@mui/material";
 import TextField from '@mui/material/TextField';
 import DoneIcon from '@mui/icons-material/Done';
-
+import './css/HC.css'
 import { LOGIN_USER } from "../graphql/mutations";
 
 export function Login() {
@@ -39,6 +39,7 @@ export function Login() {
   };
 
   return (
+    <div className='Log'>
     <Box
       sx={{
         width: 300,
@@ -57,6 +58,7 @@ export function Login() {
         <Button style={{ color: 'black', marginTop: '10%' }} variant="contained" endIcon={<DoneIcon />} color="success" type="submit">Submit</Button>
       </form>
     </Box>
+    </div>
   );
 }
 
