@@ -26,8 +26,7 @@ const resolvers = {
         .populate('posts')
         .populate('comments')
         .populate('likes')
-        .populate('voice')
-        .populate('currency');
+        .populate('voice');
     },
     user: async (parent, { username }) => {
       return User.findOne({ username })
@@ -35,8 +34,7 @@ const resolvers = {
         .populate('posts')
         .populate('comments')
         .populate('likes')
-        .populate('voice')
-        .populate('currency');
+        .populate('voice');
     },
     posts: async (parent, { username }) => {
       const params = username ? { username } : {};
