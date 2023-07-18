@@ -47,13 +47,13 @@ export function Login() {
         margin: '2%',
         padding: '2%',
         borderRadius: '15px',
-        backgroundColor: 'primary.dark',
+        backgroundColor: 'rgba(220, 220, 220, 0.5)',
       }}
     >
       <h1 style={{ fontWeight: 'bolder', fontSize: '20px', paddingBottom: '5%' }}>Login</h1>
       <form onSubmit={handleFormSubmit}>
-        <TextField id="email" name="email" label="Email" variant="outlined" onChange={handleChange} />
-        <TextField id="password" name="password" type="password" label="Password" variant="outlined" onChange={handleChange} />
+        <TextField id="email" name="email" label="Email" variant="filled" onChange={handleChange} />
+        <TextField id="password" name="password" type="password" label="Password" variant="filled" onChange={handleChange} />
 
         <Button style={{ color: 'black', marginTop: '10%' }} variant="contained" endIcon={<DoneIcon />} color="success" type="submit">Submit</Button>
       </form>

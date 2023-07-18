@@ -1,38 +1,40 @@
 import { Paper, Box, Typography} from "@mui/material";
 import './css/HC.css'
-
-
+import pro_img from './img/default_pro_pic.png';
+import CardMedia from '@mui/material/CardMedia';
 export function Profile() {
   return (
-    <div className="Pro" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+    <div className="Pro" style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center'  }}>
       <Box
         sx={{
           display: 'flex',
           flexWrap: 'wrap',
           overflow: 'auto',
-          outline: 'solid white',
+          // outline: 'solid white',
           borderRadius: '15px',
           padding: '2%',
           margin: '1%',
           height: '70vh',
-          width: '70vw',
+          width: '100vw',
+          
         }}
       >
-        <Paper elevation={3} sx={{ p: 2 }}>
-          <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
-            <img src={'profileImage'} alt="Profile" style={{ width: '100px', height: '100px', borderRadius: '50%', marginRight: '16px' }} />
-            <Typography variant="h4" gutterBottom>
-              Profile
+        <Paper elevation={3} sx={{ p: 2, flex:1 }} style={{   position: 'relative' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', flexDirection:'column' ,alignItems: 'center', justifyContent: 'center', marginBottom: '16px' }}>
+            {/* <img src={pro_img} alt="Profile Pic" style={{ width: '50vw', height: '30vh', borderRadius: '15px' }} /> */}
+            <CardMedia sx={{ height: '30vh', width: '100%'}} image={pro_img} />
+            <Typography variant="h6" gutterBottom>
+              Username
             </Typography>
           </div>
           <Typography variant="body1">
-            Name: John Doe
+            Name: 
           </Typography>
           <Typography variant="body1">
-            Email: john.doe@example.com
+            Email: 
           </Typography>
           <Typography variant="body1">
-            Location: New York
+            Location: 
           </Typography>
           {/* Add more profile information here */}
         </Paper>

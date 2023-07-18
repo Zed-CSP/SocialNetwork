@@ -46,18 +46,24 @@ export function Register() {
                 margin: '2%',
                 paddingTop: '2%',
                 borderRadius: '15px',
-                backgroundColor: 'primary.dark',
+                backgroundColor: 'rgba(220, 220, 220, 0.5)',
             }}
             >
                 <h1 style={{fontWeight: 'bolder', fontSize: '20px', paddingBottom: '5%'}}>Register</h1>
+                
                 <form onSubmit={handleSubmit}>
+                    <div className="regTxt">
                     <TextField id="filled-basic" label="Username" variant="filled" value={username} onChange={(e) => setUsername(e.target.value)} />
                     <TextField id="filled-basic" label="Email" variant="filled" value={email} onChange={(e) => setEmail(e.target.value)} />
-                    <TextField id="filled-basic" label="Date of Birth" variant="filled" type="date" InputLabelProps={{ shrink: true }} value={dateOfBirth} onChange={(e) => setDateOfBirth(e.target.value)} />
+                    
                     <TextField id="filled-basic" label="Password" variant="filled" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
                     <TextField id="filled-basic" label="Confirm Password" variant="filled" type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
-                    <Button style={{color:'black', marginTop: '10%'}} variant="contained" endIcon={<DoneIcon/>} color="success" type="submit">Submit</Button>
+                    <TextField id="filled-basic" label="Date of Birth" variant="filled" type="date" InputLabelProps={{ shrink: true }} value={dateOfBirth} onChange={(e) => setDateOfBirth(e.target.value)} />
+                   </div> 
+                   <Button style={{color:'black', marginTop: '10%'}} variant="contained" endIcon={<DoneIcon/>} color="success" type="submit">Submit</Button>
+                
                 </form>
+                
             </Box>
         </div>
     );
