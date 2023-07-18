@@ -24,3 +24,13 @@ export const LOGIN_USER = gql`
     }
   }
 `;
+
+export const CREATE_POST = gql`
+  mutation CreatePost($content: String!) {
+    createPost(content: $content) {
+      id
+      content
+      createdAt
+    }
+  }
+`;

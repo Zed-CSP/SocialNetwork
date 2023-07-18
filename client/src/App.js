@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
 import { Canvas} from '@react-three/fiber';
 import { SVGLoader } from 'three/examples/jsm/loaders/SVGLoader';
-import { Inter, Login, Register, Profile, Home, Header, Stars } from './components';
+import { Inter, Login, Register, Profile, Home, Header, Stars, CreatePost } from './components';
 
 
 
@@ -20,6 +20,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/home" element={<Home />} />
+          <Route path="/createpost" element={<CreatePost />} />
           <Route path="/" element={<Login />} />
         </Routes>
       </Router>
