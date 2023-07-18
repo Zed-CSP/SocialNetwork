@@ -12,7 +12,8 @@ const resolvers = {
           .populate('posts')
           .populate('comments')
           .populate('likes')
-          .populate('voice');
+          .populate('voice')
+          .populate('currency');
 
         return userData;
       }
@@ -25,7 +26,8 @@ const resolvers = {
         .populate('posts')
         .populate('comments')
         .populate('likes')
-        .populate('voice');
+        .populate('voice')
+        .populate('currency');
     },
     user: async (parent, { username }) => {
       return User.findOne({ username })
@@ -33,7 +35,8 @@ const resolvers = {
         .populate('posts')
         .populate('comments')
         .populate('likes')
-        .populate('voice');
+        .populate('voice')
+        .populate('currency');
     },
     posts: async (parent, { username }) => {
       const params = username ? { username } : {};
@@ -134,11 +137,11 @@ const resolvers = {
 
       throw new AuthenticationError('You need to be logged in!');
     },
-    approval: async (parent, { postId }, context) => {
-      // will prompt ai route to be called
-      // if respose is positive, then will update post
-      // if response is negative, then post will not be added to database, naughty counter up, and user will be notified
-    }
+    // approval: async (parent, { postId }, context) => {
+    //   // will prompt ai route to be called
+    //   // if respose is positive, then will update post
+    //   // if response is negative, then post will not be added to database, naughty counter up, and user will be notified
+    // }
   },
 };
 
