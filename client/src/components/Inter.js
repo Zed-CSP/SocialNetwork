@@ -1,5 +1,5 @@
 import PostCard from "./Card";
-import HomeCards from "./HomeCards";
+import HomeCards from "./Home";
 import { Avatar } from "@mui/material";
 import MailIcon from '@mui/icons-material/Mail';
 import IconButton from '@mui/material/IconButton';
