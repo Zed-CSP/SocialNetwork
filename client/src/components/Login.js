@@ -47,7 +47,7 @@ export function Login() {
         margin: '2%',
         padding: '2%',
         borderRadius: '15px',
-        backgroundColor: 'grey',
+        backgroundColor: 'rgba(220, 220, 220, 0.5)',
       }}
     >
       <h1 style={{ fontWeight: 'bolder', fontSize: '20px', paddingBottom: '5%' }}>Login</h1>
