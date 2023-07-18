@@ -11,7 +11,8 @@ const resolvers = {
           .select('-__v -password')
           .populate('posts')
           .populate('comments')
-          .populate('likes');
+          .populate('likes')
+          .populate('voice');
 
         return userData;
       }
@@ -23,14 +24,16 @@ const resolvers = {
         .select('-__v -password')
         .populate('posts')
         .populate('comments')
-        .populate('likes');
+        .populate('likes')
+        .populate('voice');
     },
     user: async (parent, { username }) => {
       return User.findOne({ username })
         .select('-__v -password')
         .populate('posts')
         .populate('comments')
-        .populate('likes');
+        .populate('likes')
+        .populate('voice');
     },
     posts: async (parent, { username }) => {
       const params = username ? { username } : {};
