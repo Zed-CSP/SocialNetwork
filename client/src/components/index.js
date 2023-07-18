@@ -1,6 +1,5 @@
-export * from './Inter';
-export * from './Card';
-export * from './HomeCards';
-export * from './Login';
-export * from './Register';
-export * from './Profile';
+export { default as Login } from './Login';
+export { default as Register } from './Register';
+export { default as Profile } from './Profile';
+export { default as Inter } from './Inter';
+export { default as HomeCards } from './HomeCards';

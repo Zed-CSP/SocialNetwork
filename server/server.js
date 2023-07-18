@@ -5,6 +5,7 @@ const { typeDefs, resolvers } = require('./schemas');
 const db = require('./config/connection');
 const jwt = require('jsonwebtoken');
 const { User } = require('./models/User');
+require('dotenv').config();
 
 // set up express app
 const app = express();
@@ -18,7 +19,7 @@ const getUserFromToken = async (token) => {
   if (!token) {
     return null;
   }
-
+ 
   
   try {
     // remove 'Bearer ' just want the token itself
