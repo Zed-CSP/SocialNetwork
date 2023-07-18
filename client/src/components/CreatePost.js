@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useMutation } from '@apollo/client';
-import { TextField, Button, Box } from '@mui/material';
+import { TextField, Button, Box, Card, CardMedia } from '@mui/material';
 import { CREATE_POST } from '../graphql/mutations';
 
 function CreatePost() {
@@ -41,7 +41,16 @@ function CreatePost() {
   return (
     <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" style={{ minHeight: '100vh' }}>
       <form onSubmit={handleSubmit}>
-        {preview && <img src={preview} alt="Preview" style={{ width: '100%', height: 'auto' }} />}
+        {preview && (
+          <Card sx={{ maxWidth: 345, marginBottom: 2 }}>
+            <CardMedia
+              component="img"
+              height="140"
+              image={preview}
+              alt="Preview"
+            />
+          </Card>
+        )}
         <TextField
           value={content}
           onChange={(e) => setContent(e.target.value)}
@@ -52,11 +61,18 @@ function CreatePost() {
           rows={4}
           margin="normal"
         />
-        <input
-          accept="image/*"
-          type="file"
-          onChange={handlePhotoChange}
-        />
+        <label htmlFor="upload-photo">
+          <input
+            accept="image/*"
+            id="upload-photo"
+            type="file"
+            hidden
+            onChange={handlePhotoChange}
+          />
+          <Button variant="contained" color="primary" component="span" style={{ marginTop: '1rem' }}>
+            Choose Photo
+          </Button>
+        </label>
         <Button type="submit" variant="contained" color="primary" style={{ marginTop: '1rem' }}>
           Create Post
         </Button>
