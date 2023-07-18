@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-.App {
+.AppSc {
   text-align: center;
   height: 100vh;
 }
