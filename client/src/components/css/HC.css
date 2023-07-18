@@ -27,7 +27,7 @@
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
-    
+    overflow: auto;
 }
 
 .Pro {
@@ -53,3 +53,21 @@
     margin: 2%;
     color:aliceblue;
 }
+.Desc {
+    background-color: lightgray;
+    padding: 2%;
+    margin: 1%;
+    border-radius: 15px;
+}
+.haus {
+    overflow: auto;
+}
+
+/* .regTxt {
+    display: flex;
+    flex-direction: column;
+    width: 75%;
+    align-items: center;
+    justify-items: center;
+    
+} */

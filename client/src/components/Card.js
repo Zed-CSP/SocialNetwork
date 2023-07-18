@@ -8,21 +8,37 @@ import FavoriteBorderTwoToneIcon from '@mui/icons-material/FavoriteBorderTwoTone
 import CreateIcon from '@mui/icons-material/Create';
 import Avatar from '@mui/material/Avatar';
 import CardMedia from '@mui/material/CardMedia';
+import ShareTwoToneIcon from '@mui/icons-material/ShareTwoTone';
+import placeholder from './img/in_img.png';
+import ReadMoreTwoToneIcon from '@mui/icons-material/ReadMoreTwoTone';
 
 export default function PostCard() {
     return (
-      <div className='Car'>
-      <Card color='dark'>
+      <div className='Car' >
+        
+      <Card color='dark' style={{ position: 'relative' }}>
       <CardMedia
-        sx={{ height: 140, width: 400}}
-
-        image={''}
-        title={''}
+        sx={{ height: '30vh', width: '50vw'}}
+        image={placeholder}
+        
       />
-        <CardContent>
-            <a href='#'>
+      
+        {/* <iframe title="embed" 
+            width={640} 
+            height={480} 
+            src="https://www.hackerrank.com/" 
+            /> */}
+        
+      <a href='#' style={{ position: 'absolute', top: '2%', left:'2%', zIndex: 1 }}>
             <Avatar alt='User' />
             </a>
+        <CardContent>
+          <div className='Tagz' >
+          <span style={{ color: 'blue', cursor: 'pointer' }} >
+              #tag1 #tag2 #tag3
+            </span>
+          </div>
+          <div className='Desc' >
           <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
             {'Username'}
           </Typography>
@@ -30,14 +46,18 @@ export default function PostCard() {
           <Typography variant="body2">
             
             <br />
-            {'"User Comment"'}
+            {'"Post Description"'}
           </Typography>
+            <IconButton style={{borderRadius: '50%'}}><ReadMoreTwoToneIcon/></IconButton>
+          </div>
         </CardContent>
         <CardActions style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
           <IconButton aria-label="like" size="small"><FavoriteBorderTwoToneIcon /></IconButton>
           <IconButton aria-label='comment' size="small"><CreateIcon /></IconButton>
+          <IconButton aria-label='share' size='small'><ShareTwoToneIcon /></IconButton>
         </CardActions>
       </Card>
+      
       </div>
     );
   }

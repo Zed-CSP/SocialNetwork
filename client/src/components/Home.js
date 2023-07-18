@@ -11,16 +11,18 @@ export function Home () {
     return(
       <div className="Hom" >
         <Box
+        className='haus'
         sx={{
             display: 'flex',
             flexWrap: 'wrap',
-            overflow: 'auto',
-            outline: "solid white",
+            // overflow: 'auto',
+            // outline: "solid white",
             borderRadius: '15px',
             padding: '2%',
             margin: '1%',
             height: '70vh',
             width: '70vw',
+            
             '& > :not(style)': {
               m: 4,
               height: 400,
@@ -30,7 +32,7 @@ export function Home () {
           }}
         >
             
-        <div className='innerFeed' style={{position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+        <div className='innerFeed' style={{position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', overflow: 'auto'}}>
             {<PostCard/>}
         </div>
 
