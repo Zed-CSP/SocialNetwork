@@ -1,15 +1,18 @@
 import React, { useState, useRef } from 'react'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
-import { Inter, Login, Register, Profile, Home, Header } from './components';
+import { Canvas} from '@react-three/fiber';
+import { SVGLoader } from 'three/examples/jsm/loaders/SVGLoader';
+import { Inter, Login, Register, Profile, Home, Header, Stars } from './components';
 
 
 
 
 
 function App() {
-  return (<div className="AppSc" >
-      
+  return (
+  <div className="AppSc" >
+     <div className='TopSide'>
       <Router>
         <Header />
         <Routes>
@@ -20,9 +23,14 @@ function App() {
           <Route path="/" element={<Login />} />
         </Routes>
       </Router>
-
-
       </div>
+    <div className='BotSide hight-screen width-screen'>
+  <Canvas camera={{position:[0, 0, 1]}}>
+      <color attach={'background'} args={['#333333']} />
+      <Stars/>
+  </Canvas>
+  </div>
+  </div>
     
   );
 }
