@@ -30,6 +30,14 @@ const UserSchema = new mongoose.Schema({
   profile_picture: {
     type: String,
   },
+  voice: {
+    type: Number, 
+    default: 100,
+  },
+  currency: {
+    type: Number,
+    default: 0,
+  },
 });
 
 // set up pre-save middleware to create password hash

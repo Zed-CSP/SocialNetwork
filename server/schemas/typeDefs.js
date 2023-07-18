@@ -12,6 +12,7 @@ const typeDefs = gql`
     profile_picture: String
     posts: [Post]
     voice: Int
+    currency: Int
   }
 
   type Post {

@@ -134,6 +134,11 @@ const resolvers = {
 
       throw new AuthenticationError('You need to be logged in!');
     },
+    approval: async (parent, { postId }, context) => {
+      // will prompt ai route to be called
+      // if respose is positive, then will update post
+      // if response is negative, then post will not be added to database, naughty counter up, and user will be notified
+    }
   },
 };
 
