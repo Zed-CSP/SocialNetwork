@@ -13,6 +13,7 @@ const typeDefs = gql`
     posts: [Post]
     voice: Int
     currency: Int
+    naughtyCount: Int
   }
 
   type Post {

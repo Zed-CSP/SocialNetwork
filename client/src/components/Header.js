@@ -9,6 +9,7 @@ import LoginTwoToneIcon from '@mui/icons-material/LoginTwoTone';
 import HowToRegTwoToneIcon from '@mui/icons-material/HowToRegTwoTone';
 const Header = () => {
   return (
+
     <div className='Bar'>
     {/* <AppBar position="static"> */}
       {/* <Toolbar> */}
@@ -34,6 +35,7 @@ const Header = () => {
       {/* </Toolbar> */}
     {/* </AppBar> */}
     </div>
+
   );
 };
 
