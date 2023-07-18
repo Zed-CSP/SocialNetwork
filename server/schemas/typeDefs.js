@@ -11,6 +11,7 @@ const typeDefs = gql`
     password: String
     profile_picture: String
     posts: [Post]
+    voice: Int
   }
 
   type Post {
@@ -20,6 +21,7 @@ const typeDefs = gql`
     username: String
     comments: [Comment]
     likes: [Like]
+    volume: Int
   }
 
   type Comment {
