@@ -4,6 +4,7 @@ import DoneIcon from '@mui/icons-material/Done';
 import { useMutation } from '@apollo/client';
 import { ADD_USER } from '../graphql/mutations';
 import { useState } from 'react';
+import './css/HC.css'
 
 export function Register() {
     const [addUser] = useMutation(ADD_USER);
@@ -37,13 +38,13 @@ export function Register() {
     };
 
     return (
-        <>
+        <div className="Reg">
             <Box 
             sx={{
                 width: 300,
-                height: 600,
+                height: 500,
                 margin: '2%',
-                padding: '2%',
+                paddingTop: '2%',
                 borderRadius: '15px',
                 backgroundColor: 'primary.dark',
             }}
@@ -58,7 +59,7 @@ export function Register() {
                     <Button style={{color:'black', marginTop: '10%'}} variant="contained" endIcon={<DoneIcon/>} color="success" type="submit">Submit</Button>
                 </form>
             </Box>
-        </>
+        </div>
     );
 }
 

@@ -1,0 +1,55 @@
+.Log {
+    
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+}
+
+.Reg {
+    
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+}
+
+.Car {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+}
+
+.Hom {
+    margin: 5% 10%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    
+}
+
+.Pro {
+    margin: 5% 10%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+}
+
+.innerFeed {
+    display: flex;
+    flex-wrap: wrap;
+    align-self: center;
+    justify-self: center;
+}
+
+.Bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-self: flex-end;
+    justify-content: end;
+    margin: 2%;
+    color:aliceblue;
+}
