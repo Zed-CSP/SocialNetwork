@@ -2,7 +2,6 @@ import React, { useState, useRef } from 'react'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
 import { Canvas} from '@react-three/fiber';
-import { SVGLoader } from 'three/examples/jsm/loaders/SVGLoader';
 import { CardExp, Login, Register, Profile, Home, Header, Stars, CreatePost } from './components';
 
 

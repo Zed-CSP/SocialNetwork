@@ -44,7 +44,29 @@ function CreatePost() {
   };
 
   return (
-    <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" style={{ minHeight: '100vh' }}>
+    <div className='Cre'>
+    <Box 
+    className='cratecase'
+    sx={{
+      display: 'flex',
+      flexWrap: 'wrap',
+      // overflow: 'auto',
+      // outline: "solid white",
+      borderRadius: '15px',
+      padding: '2%',
+      margin: '1%',
+      height: '80vh',
+      width: '100vw',
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: 'rgba(220, 220, 220, 0.5)',
+      '& > :not(style)': {
+        m: 4,
+        height: 400,
+        p: '2%',
+      },
+      
+    }}>
       <form onSubmit={handleSubmit}>
         {preview && (
           <Card sx={{ maxWidth: 345, marginBottom: 2 }}>
@@ -57,6 +79,7 @@ function CreatePost() {
           </Card>
         )}
         <TextField
+        
           value={content}
           onChange={(e) => setContent(e.target.value)}
           label="Post Content"
@@ -84,6 +107,7 @@ function CreatePost() {
         {error && <p>Error creating post: {error.message}</p>}
       </form>
     </Box>
+    </div>
   );
 }
 
