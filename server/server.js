@@ -56,6 +56,7 @@ const server = new ApolloServer({
     // return an object user
     return { user };
   },
+  uploads: true
 });
 
 // Start the Apollo server

@@ -1,18 +1,19 @@
 import React, { useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { TextField, Button, Box, Card, CardMedia } from '@mui/material';
-import { CREATE_POST } from '../graphql/mutations';
+import { ADD_POST } from '../graphql/mutations';
 
 function CreatePost() {
   const [content, setContent] = useState('');
   const [photo, setPhoto] = useState(null);
   const [preview, setPreview] = useState(null);
-  const [createPost, { error }] = useMutation(CREATE_POST);
+  const [addPost, { error }] = useMutation(ADD_POST);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const { data } = await createPost({
+      console.log("sending to addPost")
+      const { data } = await addPost({
         variables: {
           content,
           photo: photo

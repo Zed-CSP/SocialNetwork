@@ -26,14 +26,15 @@ export const LOGIN_USER = gql`
 `;
 
 
-export const CREATE_POST = gql`
-  mutation CreatePost($content: String!, $imageUrl: String!) {
-    createPost(content: $content, imageUrl: $imageUrl) {
+export const ADD_POST = gql`
+  mutation addPost($content: String!, $photo: Upload!) {
+    addPost(content: $content, photo: $photo) {
       _id
       content
-      imageUrl
+      photoUrl
       createdAt
       username
     }
   }
 `;
+
