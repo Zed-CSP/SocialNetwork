@@ -7,3 +7,4 @@ export { default as Stars } from './Background';
 export { default as CreatePost } from './CreatePost';
 export { default as CreditForm } from './CreditForm';
 export { default as CardExp } from './CardExp';
+export { default as Dice} from './Background2';

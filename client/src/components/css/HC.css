@@ -22,6 +22,7 @@
     align-items: center;
     justify-content: center;
     animation: fade-in-up 500ms ease-out;
+    margin-bottom: 2%;
 }
 
 .Hom {
@@ -118,6 +119,9 @@
     overflow: auto;
 }
 
-.cratecase{
-    
+.innerfeed{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }

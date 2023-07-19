@@ -18,7 +18,7 @@
   width: 100vw;
   position: relative;
   z-index: 1;
-  
+  overflow: hidden;
 }
 
 .TopSide{
@@ -26,6 +26,6 @@
   width: 100vw;
   position: absolute;
   z-index: 2;
-  
+  overflow: hidden;
 }
 
