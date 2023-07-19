@@ -70,8 +70,9 @@ function CreatePost() {
     }}>
       <form onSubmit={handleSubmit}>
         {preview && (
-          <Card sx={{ maxWidth: 345, marginBottom: 2 }}>
+          <Card sx={{ maxWidth: 345, marginBottom: 1 }}>
             <CardMedia
+            sx={{height: '30vh', width: '40vw'}}
               component="img"
               height="140"
               image={preview}
