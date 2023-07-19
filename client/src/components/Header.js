@@ -32,6 +32,9 @@ const Header = () => {
         <IconButton color="inherit" component={Link} to="/profile">
           <AccountCircleTwoToneIcon/>
         </IconButton>
+        <IconButton color="inherit" component={Link} to="/createpost">
+          <AccountCircleTwoToneIcon/>
+        </IconButton>
       {/* </Toolbar> */}
     {/* </AppBar> */}
     </div>

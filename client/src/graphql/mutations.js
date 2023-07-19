@@ -25,12 +25,15 @@ export const LOGIN_USER = gql`
   }
 `;
 
+
 export const CREATE_POST = gql`
-  mutation CreatePost($content: String!) {
-    createPost(content: $content) {
-      id
+  mutation CreatePost($content: String!, $imageUrl: String!) {
+    createPost(content: $content, imageUrl: $imageUrl) {
+      _id
       content
+      imageUrl
       createdAt
+      username
     }
   }
 `;
