@@ -12,7 +12,12 @@ function CreatePost() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const { data } = await createPost({ variables: { content, photo } });
+      const { data } = await createPost({
+        variables: {
+          content,
+          photo: photo
+        },
+      });
       console.log(data);
       setContent('');
       setPhoto(null);
@@ -69,7 +74,7 @@ function CreatePost() {
             hidden
             onChange={handlePhotoChange}
           />
-          <Button variant="contained" color="primary" component="span" style={{ marginTop: '1rem' }}>
+          <Button variant="contained" color="primary" component="span" style={{ marginTop: '1rem', marginRight: '1rem' }}>
             Choose Photo
           </Button>
         </label>
