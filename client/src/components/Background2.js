@@ -3,8 +3,6 @@ import { useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { Instances, Instance} from '@react-three/drei'
 
-
-
 const particles = Array.from({ length: 150 }, () => ({
 factor: MathUtils.randInt(20, 100),
 speed: MathUtils.randFloat(0.01, 0.75),
@@ -12,7 +10,6 @@ xFactor: MathUtils.randFloatSpread(40),
 yFactor: MathUtils.randFloatSpread(10),
 zFactor: MathUtils.randFloatSpread(10)
 }))
-
 
 // export default function App() {
 // return (
@@ -31,7 +28,6 @@ zFactor: MathUtils.randFloatSpread(10)
 // )
 // }
 
-
 export function Dice() {
 const ref = useRef()
 useFrame((state, delta) => void (ref.current.rotation.y = MathUtils.damp(ref.current.rotation.y, (-state.mouse.x * Math.PI) / 6, 2.75, delta)))
@@ -45,7 +41,6 @@ return (
 </Instances>
 )
 }
-
 
 function Die({ factor, speed, xFactor, yFactor, zFactor }) {
 const ref = useRef()
