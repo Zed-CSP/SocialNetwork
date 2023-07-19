@@ -5,9 +5,6 @@ import { Canvas } from '@react-three/fiber';
 import { Dice, CardExp, Login, Register, Profile, Home, Header, Stars, CreatePost } from './components';
 import {Button} from '@mui/material';
 
-
-
-
 function App() {
   const [LightTheme, setLightTheme] = useState(false);
   const [Background, setBackground] = useState('#333333');
@@ -52,6 +49,5 @@ function App() {
     
   );
 }
-
 
 export default App;
