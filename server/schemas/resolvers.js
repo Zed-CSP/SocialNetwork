@@ -71,33 +71,6 @@ const resolvers = {
   },
 
   Mutation: {
-    addPost: async (parent, { content, photo }, context) => {
-      if (context.user) {
-          let photoUrl;
-
-          if (photo) {
-              const { createReadStream, filename } = await photo;
-              const fileStream = createReadStream();
-
-              try {
-                  photoUrl = await uploadToS3(fileStream, filename);
-              } catch (error) {
-                  throw new Error('Error uploading image to S3.');
-              }
-          }
-
-          const post = await Post.create({ content, photoUrl, username: context.user.username });
-
-          await User.findByIdAndUpdate(
-              { _id: context.user._id },
-              { $push: { posts: post._id } },
-              { new: true }
-          );
-
-          return post;
-      }
-      throw new AuthenticationError('You need to be logged in!');
-    },
     login: async (parent, { email, password }) => {
       console.log(email, password, "email, password")
       const user = await User.findOne({ email });
@@ -108,17 +81,18 @@ const resolvers = {
 
       const correctPw = await user.isCorrectPassword(password);
 
-      console.log("User success for log in almost just token to go");
-
       if (!correctPw) {
         throw new AuthenticationError('Incorrect credentials');
       }
 
       const token = signToken(user);
+      console.log(token, "token", user, "user");
       return { token, user };
     },
     addPost: async (parent, { content, photo }, context) => {
+      console.log("addPost");
       if (context.user) {
+
           let photoUrl;
 
           // Handle the photo upload if it exists

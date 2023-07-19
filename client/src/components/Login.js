@@ -5,6 +5,7 @@ import TextField from '@mui/material/TextField';
 import DoneIcon from '@mui/icons-material/Done';
 import './css/HC.css'
 import { LOGIN_USER } from "../graphql/mutations";
+import Auth from '../utils/auth';
 
 export function Login() {
   const [formState, setFormState] = useState({ email: '', password: '' });
@@ -27,6 +28,8 @@ export function Login() {
       const { data } = await login({
         variables: { ...formState }
       });
+
+      Auth.login(data.login.token);
 
       // redirect to HomeCards.js
       if(data.login.token){
