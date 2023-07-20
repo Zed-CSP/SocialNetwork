@@ -16,7 +16,7 @@ export default function PostCard() {
     return (
       <div className='Car' >
         
-      <Card color='dark' style={{ position: 'relative', backgroundColor: 'rgba(220, 220, 220, 0.5)' }}>
+      <Card color='dark' style={{ position: 'relative', backgroundColor: 'rgba(128, 128, 128, 0.6)', borderRadius: '15px' }}>
       <CardMedia
         sx={{ height: '20vh', width: '30vw'}}
         image={placeholder}
