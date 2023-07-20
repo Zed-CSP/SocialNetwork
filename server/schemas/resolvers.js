@@ -35,23 +35,19 @@ const resolvers = {
   Query: {
     userFeed: async (_, __, context) => {
       if (!context.user) {
-          throw new Error('Authentication required!');
+        throw new Error('Authentication required!');
       }
       return await personalizedFeed(context.user._id);
-  },
+    },
     me: async (parent, args, context) => {
       if (context.user) {
         const userData = await User.findOne({ _id: context.user._id })
           .select('-__v -password')
           .populate('posts')
           .populate('comments')
-          .populate('likes')
-          .populate('voice')
-          .populate('currency');
-
+          .populate('likes');
         return userData;
       }
-
       throw new AuthenticationError('Not logged in');
     },
     users: async () => {
@@ -59,17 +55,16 @@ const resolvers = {
         .select('-__v -password')
         .populate('posts')
         .populate('comments')
-        .populate('likes')
-        .populate('voice');
+        .populate('likes');
     },
     user: async (parent, { username }) => {
       return User.findOne({ username })
         .select('-__v -password')
         .populate('posts')
         .populate('comments')
-        .populate('likes')
-        .populate('voice');
+        .populate('likes');
     },
+
     posts: async (parent, { username }) => {
       const params = username ? { username } : {};
       return Post.find(params).sort({ createdAt: -1 });
@@ -114,7 +109,7 @@ const resolvers = {
       if (context.user) {
 
         console.log("User is logged in. Adding post...");
-        
+
         let photoUrl;
 
         // Handle the photo upload if it exists
