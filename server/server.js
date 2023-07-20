@@ -14,36 +14,24 @@ const PORT = process.env.PORT || 3001;
 
 const jwtSecret = process.env.JWT_SECRET;
 
-// helper function to get a user's token from the request headers
-const getUserFromToken = async (token) => {
-  if (!token) {
-    return null;
-  }
- 
-  
+async function getUserFromToken(token) {
+  console.log('token getting user in server.js in getUserFromToken', token)
+  if (!token) return null;
+
   try {
-    // remove 'Bearer ' just want the token itself
-    if (token.startsWith('Bearer ')) {
-      token = token.slice(7, token.length).trimLeft();
-    }
+      // If you're using JWTs, for instance, you might do something like:
+      const decoded = jwt.verify(token, YOUR_SECRET_KEY);
+      const user = await User.findById(decoded.id);
 
-    
-    // decode the token using your secret key
-    const { data } = jwt.verify(token, jwtSecret); 
-
-    // find the user with the _id from the token
-    const user = await User.findById(data._id);
-
-    return user;
+      return user;
   } catch (err) {
-    console.error(err);
-    return null;
+      return null;
   }
-};
+}
 
 
 
-// Create a new Apollo server and pass in the schema data
+
 const server = new ApolloServer({
   typeDefs,
   resolvers,
@@ -53,11 +41,10 @@ const server = new ApolloServer({
 
     const user = await getUserFromToken(token);
 
-    // return an object user
-    return { user };
-  },
-  uploads: true
+    return { user }; // This will either be the user object or null
+  }
 });
+
 
 // Start the Apollo server
 (async function() {

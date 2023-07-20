@@ -12,14 +12,28 @@ function CreatePost() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      console.log("sending to addPost")
+
+      console.log("sending to addPost");
+
+      
+
+      if (!content || !photo) {
+        console.error("Content and photo are required.");
+        return; 
+      }
+
+      console.log(content, " - content", photo, " - photo");
+
       const { data } = await addPost({
         variables: {
           content,
-          photo: photo
+          photo: photo.name
         },
       });
-      console.log(data);
+
+      console.log("data", data);
+
+
       setContent('');
       setPhoto(null);
       setPreview(null);

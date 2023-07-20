@@ -89,8 +89,11 @@ const resolvers = {
       console.log(token, "token", user, "user");
       return { token, user };
     },
+
     addPost: async (parent, { content, photo }, context) => {
-      console.log("addPost");
+      console.log("hit addPost resolver");
+      console.log(context, "context.user");
+      
       if (context.user) {
 
           let photoUrl;
@@ -119,6 +122,9 @@ const resolvers = {
       }
       throw new AuthenticationError('You need to be logged in!');
     },
+
+
+
     addLike: async (parent, { postId }, context) => {
       if (context.user) {
         const like = await Like.create({ username: context.user.username });
