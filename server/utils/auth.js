@@ -1,37 +1,34 @@
 const jwt = require('jsonwebtoken');
-const expiration = '2h';
 require('dotenv').config();
 
-
-const secret = process.env.JWT_SECRET || "mysecrectfuckoff";
+const secret = process.env.JWT_SECRET;
+const expiration = '2h';
 
 module.exports = {
-  // function for our authenticated routes
   signToken: function ({ username, email, _id }) {
-    // create a token with the username, email, and id
     const payload = { username, email, _id };
-    // sign the token with secret key / expiration date
     return jwt.sign({ data: payload }, secret, { expiresIn: expiration });
   },
-  // function for our unauthenticated routes
+  
   authMiddleware: function ({ req }) {
-    // allows token to be sent via req.body, req.query, or headers
-    let token = req.body.token || req.query.token || req.headers.authorization;
-    // separate "Bearer" from "<tokenvalue>"
-    if (req.headers.authorization) {  
+    
+    // Only retrieve tokens from the authorization header
+    let token = req.headers.authorization;
+    
+    if (token && token.startsWith('Bearer ')) {
       token = token.split(' ').pop().trim();
-    }
-    // if no token, return request object as is
-    if (!token) {
+    } else {
+      // If no token, return request object as is
       return req;
     }
-    // otherwise decode and attach decoded user data to request object
+    
     try {
-      const { data } = jwt.verify(token, secret, { maxAge: expiration });
+      const { data } = jwt.verify(token, secret);
       req.user = data;
     } catch (err) {
       console.log('Error decoding token:', err.message);
     }
+    
     return req;
   },
 };

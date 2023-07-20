@@ -72,7 +72,7 @@ const resolvers = {
 
   Mutation: {
     login: async (parent, { email, password }) => {
-      console.log(email, password, "email, password")
+     
       const user = await User.findOne({ email });
 
       if (!user) {
@@ -86,11 +86,12 @@ const resolvers = {
       }
 
       const token = signToken(user);
-      console.log(token, "token", user, "user");
+     
       return { token, user };
     },
     addPost: async (parent, { content, photo }, context) => {
       console.log("addPost");
+      console.log(context, "context");
       if (context.user) {
 
           let photoUrl;

@@ -4,8 +4,10 @@ const { ApolloServer } = require('apollo-server-express');
 const { typeDefs, resolvers } = require('./schemas');
 const db = require('./config/connection');
 const jwt = require('jsonwebtoken');
-const { User } = require('./models/User');
+const User = require('./models/User');
 require('dotenv').config();
+
+
 
 // set up express app
 const app = express();
@@ -14,32 +16,31 @@ const PORT = process.env.PORT || 3001;
 
 const jwtSecret = process.env.JWT_SECRET;
 
-// helper function to get a user's token from the request headers
 const getUserFromToken = async (token) => {
   if (!token) {
+    console.log("Token not provided");
     return null;
   }
  
-  
   try {
-    // remove 'Bearer ' just want the token itself
     if (token.startsWith('Bearer ')) {
       token = token.slice(7, token.length).trimLeft();
     }
 
-    
-    // decode the token using your secret key
+    console.log("Decoding token:", token);
     const { data } = jwt.verify(token, jwtSecret); 
+    console.log("Token decoded. User ID:", data._id);
 
-    // find the user with the _id from the token
     const user = await User.findById(data._id);
+    console.log("User fetched from database:", user);
 
     return user;
   } catch (err) {
-    console.error(err);
+    console.error("Error in getUserFromToken:", err);
     return null;
   }
 };
+
 
 
 
@@ -50,6 +51,8 @@ const server = new ApolloServer({
   context: async ({ req }) => {
   
     const token = req.headers.authorization || '';
+
+    console.log(req.headers, ': - req in server.js');
 
     const user = await getUserFromToken(token);
 

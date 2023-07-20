@@ -12,7 +12,9 @@ function CreatePost() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
+      
       console.log("sending to addPost")
+
       const { data } = await addPost({
         variables: {
           content,
