@@ -103,16 +103,37 @@ function CreatePost() {
               hidden
               onChange={handlePhotoChange}
             />
-            <Button variant="contained" color="primary" component="span" style={{ marginTop: '1rem', marginRight: '1rem' }}>
-              Choose Photo
-            </Button>
-          </label>
-          <Button type="submit" variant="contained" color="primary" style={{ marginTop: '1rem' }}>
-            Create Post
+          </Card>
+        )}
+        <TextField
+        
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+          label="Post Content"
+          variant="outlined"
+          fullWidth
+          multiline
+          rows={4}
+          margin="normal"
+        />
+        <label htmlFor="upload-photo">
+          <input
+            accept="image/*"
+            id="upload-photo"
+            type="file"
+            hidden
+            onChange={handlePhotoChange}
+          />
+          <Button variant="contained" component="span" style={{ marginTop: '1rem', marginRight: '1rem', backgroundColor: 'grey' }}>
+            Choose Photo
           </Button>
-          {error && <p>Error creating post: {error.message}</p>}
-        </form>
-      </Box>
+        </label>
+        <Button type="submit" variant="contained" style={{ marginTop: '1rem', backgroundColor: 'grey' }}>
+          Create Post
+        </Button>
+        {error && <p>Error creating post: {error.message}</p>}
+      </form>
+    </Box>
     </div>
   );
 }
