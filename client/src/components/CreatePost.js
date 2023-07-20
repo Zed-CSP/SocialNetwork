@@ -60,7 +60,7 @@ function CreatePost() {
       width: '100vw',
       alignItems: 'center',
       justifyContent: 'center',
-      backgroundColor: 'rgba(220, 220, 220, 0.5)',
+      backgroundColor: 'rgba(128, 128, 128, 0.6)',
       '& > :not(style)': {
         m: 4,
         height: 400,
@@ -99,11 +99,11 @@ function CreatePost() {
             hidden
             onChange={handlePhotoChange}
           />
-          <Button variant="contained" color="primary" component="span" style={{ marginTop: '1rem', marginRight: '1rem' }}>
+          <Button variant="contained" component="span" style={{ marginTop: '1rem', marginRight: '1rem', backgroundColor: 'grey' }}>
             Choose Photo
           </Button>
         </label>
-        <Button type="submit" variant="contained" color="primary" style={{ marginTop: '1rem' }}>
+        <Button type="submit" variant="contained" style={{ marginTop: '1rem', backgroundColor: 'grey' }}>
           Create Post
         </Button>
         {error && <p>Error creating post: {error.message}</p>}

@@ -17,6 +17,11 @@ function App() {
   return (
   <div className="AppSc" >
      <div className='TopSide'>
+     <div className='Switch'>
+        <Button className='Theme' style={{color: 'white', backgroundColor: 'rgba(128, 128, 128, 0.8)', top: 15, left: 10}} onClick={() => switchBackground(!LightTheme)}>
+          {LightTheme ? 'Dark' : 'Light'}
+        </Button>
+      </div>
       <Router>
         <Header />
         <Routes>
@@ -29,15 +34,11 @@ function App() {
           <Route path="/expanded" element={<CardExp />} />
         </Routes>
       </Router>
-      <div className='Switch'>
-        <Button onClick={() => switchBackground(!LightTheme)}>
-          {LightTheme ? 'Dark' : 'Light'}
-        </Button>
-  </div>
+
       </div>
     <div className='BotSide hight-screen width-screen'>
   <Canvas camera={{position:[0, 0, 1]}}>
-      <color attach={'background'} args={[Background]} /> // Dark: #333333
+      <color attach={'background'} args={[Background]} /> 
       <ambientLight intensity={1} />
       <pointLight position={[10, 10, 10]} castShadow />
       {LightTheme ? <Dice/> : <Stars/>}
