@@ -21,7 +21,6 @@ export function Profile() {
           display: 'flex',
           flexWrap: 'wrap',
           overflow: 'auto',
-          // outline: 'solid white',
           borderRadius: '15px',
           padding: '2%',
           
