@@ -3,28 +3,28 @@ const { signToken } = require('../utils/auth');
 const { AuthenticationError } = require('apollo-server-express'); // Make sure to import this.
 const upload = require('../config/s3');
 const AWS = require('aws-sdk'); // Required for direct S3 operations
-
+const { v4: uuidv4 } = require('uuid');  // for generating unique filenames
 // Use the already set-up s3 instance from your s3.js file
 const s3 = new AWS.S3({
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-    region: process.env.AWS_REGION
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  region: process.env.AWS_REGION
 });
 
 const uploadToS3 = async (fileStream, filename) => {
   const uploadParams = {
-      Bucket: process.env.AWS_S3_BUCKET,
-      Key: filename,
-      Body: fileStream
+    Bucket: process.env.AWS_S3_BUCKET,
+    Key: filename,
+    Body: fileStream
   };
 
   return new Promise((resolve, reject) => {
-      s3.upload(uploadParams, (error, data) => {
-          if (error) {
-              reject(new Error('Error uploading image.'));
-          }
-          resolve(data.Location);
-      });
+    s3.upload(uploadParams, (error, data) => {
+      if (error) {
+        reject(new Error('Error uploading image.'));
+      }
+      resolve(data.Location);
+    });
   });
 };
 
@@ -72,7 +72,7 @@ const resolvers = {
 
   Mutation: {
     login: async (parent, { email, password }) => {
-      console.log(email, password, "email, password")
+
       const user = await User.findOne({ email });
 
       if (!user) {
@@ -86,39 +86,44 @@ const resolvers = {
       }
 
       const token = signToken(user);
-      console.log(token, "token", user, "user");
+
       return { token, user };
     },
     addPost: async (parent, { content, photo }, context) => {
-      console.log("addPost");
+         console.log("addPost resolver");
       if (context.user) {
+        let photoUrl;
 
-          let photoUrl;
+        // Handle the photo upload if it exists
+        if (photo) {
+          console.log('await photo in addPost', photo);
 
-          // Handle the photo upload if it exists
-          if (photo) {
-              const { createReadStream, filename } = await photo;
-              const fileStream = createReadStream();
+          const { createReadStream, filename } = await photo;
+          const fileStream = createReadStream();
+          const uniqueFilename = uuidv4() + "-" + filename;  // generate a unique name
 
-              try {
-                  photoUrl = await uploadToS3(fileStream, filename);
-              } catch (error) {
-                  throw new Error('Error uploading image to S3.');
-              }
+          try {
+            photoUrl = await uploadToS3(fileStream, uniqueFilename);
+          } catch (error) {
+            console.error("Error uploading to S3:", error);
+            throw new Error('Error uploading image to S3.');
           }
+        }
 
-          const post = await Post.create({ content, photoUrl, username: context.user.username });
+        const post = await Post.create({ content, photo: photoUrl, username: context.user.username });
 
-          await User.findByIdAndUpdate(
-              { _id: context.user._id },
-              { $push: { posts: post._id } },
-              { new: true }
-          );
+        await User.findByIdAndUpdate(
+          { _id: context.user._id },
+          { $push: { posts: post._id } },
+          { new: true }
+        );
 
-          return post;
+        return post;
       }
+
       throw new AuthenticationError('You need to be logged in!');
     },
+
     addLike: async (parent, { postId }, context) => {
       if (context.user) {
         const like = await Like.create({ username: context.user.username });

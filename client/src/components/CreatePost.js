@@ -3,6 +3,7 @@ import { useMutation } from '@apollo/client';
 import { TextField, Button, Box, Card, CardMedia } from '@mui/material';
 import { ADD_POST } from '../graphql/mutations';
 
+
 function CreatePost() {
   const [content, setContent] = useState('');
   const [photo, setPhoto] = useState(null);
@@ -12,11 +13,14 @@ function CreatePost() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      console.log("sending to addPost")
+
+      console.log("photo", photo);
+      console.log("content", content);
+
       const { data } = await addPost({
         variables: {
           content,
-          photo: photo
+          photo,
         },
       });
       console.log(data);
@@ -31,6 +35,8 @@ function CreatePost() {
   const handlePhotoChange = (event) => {
     const file = event.target.files[0];
     setPhoto(file);
+
+    
 
     // Create a new FileReader object
     let reader = new FileReader();

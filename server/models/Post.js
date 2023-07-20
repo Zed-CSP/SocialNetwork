@@ -5,7 +5,7 @@ const PostSchema = new Schema({
     type: String,
     required: true,
   },
-  photoUrl: {  // for storing the S3 URL of the image.
+  photo: {  // for storing the S3 URL of the image.
     type: String,
   },
   createdAt: {
