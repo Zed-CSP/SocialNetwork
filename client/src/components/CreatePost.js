@@ -28,6 +28,8 @@ function CreatePost() {
       setContent('');
       setPhoto(null);
       setPreview(null);
+      //send user to /home
+      window.location.replace('/home');
     } catch (e) {
       console.error(e);
     }

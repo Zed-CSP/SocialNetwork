@@ -1,7 +1,7 @@
 const { User, Post, Comment, Like } = require('../models');
 const { signToken } = require('../utils/auth');
 const { AuthenticationError } = require('apollo-server-express'); // Make sure to import this.
-const upload = require('../config/s3');
+
 const AWS = require('aws-sdk'); // Required for direct S3 operations
 const { v4: uuidv4 } = require('uuid');  // for generating unique filenames
 // Use the already set-up s3 instance from your s3.js file
