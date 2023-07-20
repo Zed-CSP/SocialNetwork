@@ -5,6 +5,9 @@ const upload = require('../config/s3');
 const AWS = require('aws-sdk'); // Required for direct S3 operations
 const { v4: uuidv4 } = require('uuid');  // for generating unique filenames
 // Use the already set-up s3 instance from your s3.js file
+const GraphQLUpload = require('graphql-upload');
+
+
 const s3 = new AWS.S3({
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
@@ -69,7 +72,7 @@ const resolvers = {
       return Post.findOne({ _id });
     },
   },
-
+  Upload: GraphQLUpload,
   Mutation: {
     login: async (parent, { email, password }) => {
 
@@ -89,16 +92,23 @@ const resolvers = {
 
       return { token, user };
     },
-    addPost: async (parent, { content, photo }, context) => {
-         console.log("addPost resolver");
+
+    addPost: async (_, { content, photo }, context) => {
+      console.log("addPost resolver");
+      console.log("content:", content);
+      console.log("photo:", photo.file);
+      console.log("context:", context.user);
+
       if (context.user) {
+
+        console.log("User is logged in. Adding post...");
+        
         let photoUrl;
 
         // Handle the photo upload if it exists
         if (photo) {
-          console.log('await photo in addPost', photo);
 
-          const { createReadStream, filename } = await photo;
+          const { createReadStream, filename } = await photo.file;
           const fileStream = createReadStream();
           const uniqueFilename = uuidv4() + "-" + filename;  // generate a unique name
 
@@ -109,6 +119,8 @@ const resolvers = {
             throw new Error('Error uploading image to S3.');
           }
         }
+
+
 
         const post = await Post.create({ content, photo: photoUrl, username: context.user.username });
 

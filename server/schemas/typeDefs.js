@@ -27,7 +27,7 @@ scalar Upload
     createdAt: String
     username: String
     volume: Int
-    comments: [Comment]
+    comments: [Comment] 
     likes: [Like]
   }
 
@@ -59,7 +59,7 @@ scalar Upload
   type Mutation {
     login(email: String!, password: String!): Auth
     addUser(username: String!, email: String!, date_of_birth: String!, password: String!): Auth
-    addPost(content: String!, photo: Upload): Post
+    addPost(content: String!, photo: Upload): Post 
     addComment(postId: ID!, content: String!): Post
     addLike(postId: ID!): Post
     deletePost(postId: ID!): User
