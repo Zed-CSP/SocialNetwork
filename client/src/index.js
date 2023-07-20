@@ -4,14 +4,14 @@ import App from './App';
 import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client';
 import { setContext } from '@apollo/link-context';
 import { createUploadLink } from 'apollo-upload-client';
-import { Elements } from '@stripe/react-stripe-js';
-import { loadStripe } from '@stripe/stripe-js';
 
-const stripePromise = loadStripe('stripe_public_key');
+
+
+
 
 // Use createUploadLink instead of HttpLink for file uploads
 const uploadLink = createUploadLink({
-  uri: 'http://localhost:3001/graphql',
+  uri: 'http://localhost:3001/graphql', 
 });
 
 const authLink = setContext((_, { headers }) => {
@@ -35,8 +35,8 @@ const client = new ApolloClient({
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <ApolloProvider client={client}>
-        <Elements stripe={stripePromise}>
+       
             <App />
-        </Elements>
+       
     </ApolloProvider>
 );

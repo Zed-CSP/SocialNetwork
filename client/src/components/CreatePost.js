@@ -14,8 +14,9 @@ function CreatePost() {
     event.preventDefault();
     try {
 
-      console.log("photo", photo);
-      console.log("content", content);
+      console.log("photo type", typeof photo);
+      console.log("photo content", photo);
+
 
       const { data } = await addPost({
         variables: {
@@ -35,8 +36,9 @@ function CreatePost() {
   const handlePhotoChange = (event) => {
     const file = event.target.files[0];
     setPhoto(file);
+    console.log(photo, "photo");
 
-    
+
 
     // Create a new FileReader object
     let reader = new FileReader();
@@ -52,7 +54,7 @@ function CreatePost() {
 
   return (
     <div className='Cre'>
-      <Box 
+      <Box
         className='cratecase'
         sx={{
           display: 'flex',
@@ -75,7 +77,7 @@ function CreatePost() {
           {preview && (
             <Card sx={{ maxWidth: 345, marginBottom: 1 }}>
               <CardMedia
-                sx={{height: '30vh', width: '40vw'}}
+                sx={{ height: '30vh', width: '40vw' }}
                 component="img"
                 height="140"
                 image={preview}

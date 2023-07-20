@@ -6,6 +6,7 @@ const db = require('./config/connection');
 const jwt = require('jsonwebtoken');
 const User = require('./models/User');
 require('dotenv').config();
+const { graphqlUploadExpress } = require('graphql-upload');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -44,21 +45,32 @@ const server = new ApolloServer({
     const user = await getUserFromToken(token);
     return { user };
   },
-  uploads: true
+  uploads: false
 });
 
 (async function() {
   await server.start();
+
+  app.use((req, res, next) => {
+    console.log('Request received:', req.method, req.path);
+    console.log('Body:', req.body);
+    console.log('Headers:', req.headers);
+    if (req.is('text/*')) {
+      req.text().then(txt => {
+        console.log('Request body:', txt);
+        next();
+      });
+    } else {
+      next();
+    }
+  });
   
   
   app.use(express.urlencoded({ extended: true }));
-  app.use(express.json());
+app.use(express.json());
 
-  // Add right after server.start()
-app.use((req, res, next) => {
-  console.log("Incoming Request Body:", req.body);
-  next();
-});
+// Add middleware for handling uploads
+app.use(graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }));
 
 
   // Apollo middleware
