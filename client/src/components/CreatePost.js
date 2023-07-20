@@ -3,6 +3,7 @@ import { useMutation } from '@apollo/client';
 import { TextField, Button, Box, Card, CardMedia } from '@mui/material';
 import { ADD_POST } from '../graphql/mutations';
 
+
 function CreatePost() {
   const [content, setContent] = useState('');
   const [photo, setPhoto] = useState(null);
@@ -12,13 +13,14 @@ function CreatePost() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      
-      console.log("sending to addPost")
+
+      console.log("photo", photo);
+      console.log("content", content);
 
       const { data } = await addPost({
         variables: {
           content,
-          photo: photo
+          photo,
         },
       });
       console.log(data);
@@ -34,6 +36,8 @@ function CreatePost() {
     const file = event.target.files[0];
     setPhoto(file);
 
+    
+
     // Create a new FileReader object
     let reader = new FileReader();
 
@@ -48,69 +52,65 @@ function CreatePost() {
 
   return (
     <div className='Cre'>
-    <Box 
-    className='cratecase'
-    sx={{
-      display: 'flex',
-      flexWrap: 'wrap',
-      // overflow: 'auto',
-      // outline: "solid white",
-      borderRadius: '15px',
-      padding: '2%',
-      margin: '1%',
-      height: '80vh',
-      width: '100vw',
-      alignItems: 'center',
-      justifyContent: 'center',
-      backgroundColor: 'rgba(220, 220, 220, 0.5)',
-      '& > :not(style)': {
-        m: 4,
-        height: 400,
-        p: '2%',
-      },
-      
-    }}>
-      <form onSubmit={handleSubmit}>
-        {preview && (
-          <Card sx={{ maxWidth: 345, marginBottom: 1 }}>
-            <CardMedia
-            sx={{height: '30vh', width: '40vw'}}
-              component="img"
-              height="140"
-              image={preview}
-              alt="Preview"
-            />
-          </Card>
-        )}
-        <TextField
-        
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          label="Post Content"
-          variant="outlined"
-          fullWidth
-          multiline
-          rows={4}
-          margin="normal"
-        />
-        <label htmlFor="upload-photo">
-          <input
-            accept="image/*"
-            id="upload-photo"
-            type="file"
-            hidden
-            onChange={handlePhotoChange}
+      <Box 
+        className='cratecase'
+        sx={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          borderRadius: '15px',
+          padding: '2%',
+          margin: '1%',
+          height: '80vh',
+          width: '100vw',
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: 'rgba(220, 220, 220, 0.5)',
+          '& > :not(style)': {
+            m: 4,
+            height: 400,
+            p: '2%',
+          },
+        }}>
+        <form onSubmit={handleSubmit}>
+          {preview && (
+            <Card sx={{ maxWidth: 345, marginBottom: 1 }}>
+              <CardMedia
+                sx={{height: '30vh', width: '40vw'}}
+                component="img"
+                height="140"
+                image={preview}
+                alt="Preview"
+              />
+            </Card>
+          )}
+          <TextField
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            label="Post Content"
+            variant="outlined"
+            fullWidth
+            multiline
+            rows={4}
+            margin="normal"
           />
-          <Button variant="contained" color="primary" component="span" style={{ marginTop: '1rem', marginRight: '1rem' }}>
-            Choose Photo
+          <label htmlFor="upload-photo">
+            <input
+              accept="image/*"
+              id="upload-photo"
+              type="file"
+              hidden
+              onChange={handlePhotoChange}
+            />
+            <Button variant="contained" color="primary" component="span" style={{ marginTop: '1rem', marginRight: '1rem' }}>
+              Choose Photo
+            </Button>
+          </label>
+          <Button type="submit" variant="contained" color="primary" style={{ marginTop: '1rem' }}>
+            Create Post
           </Button>
-        </label>
-        <Button type="submit" variant="contained" color="primary" style={{ marginTop: '1rem' }}>
-          Create Post
-        </Button>
-        {error && <p>Error creating post: {error.message}</p>}
-      </form>
-    </Box>
+          {error && <p>Error creating post: {error.message}</p>}
+        </form>
+      </Box>
     </div>
   );
 }

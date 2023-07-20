@@ -27,11 +27,11 @@ export const LOGIN_USER = gql`
 
 
 export const ADD_POST = gql`
-  mutation addPost($content: String!, $photo: Upload!) {
+  mutation addPost($content: String!, $photo: Upload) {
     addPost(content: $content, photo: $photo) {
       _id
       content
-      photoUrl
+      photo
       createdAt
       username
     }
