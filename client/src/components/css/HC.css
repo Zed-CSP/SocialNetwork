@@ -52,13 +52,14 @@
 
 .Bar {
     display: flex;
-    flex-wrap: wrap;
     align-self: flex-end;
     justify-content: end;
-    margin: 2%;
+    margin: 1%;
     color:aliceblue;
     animation: fade-in-down 500ms ease-out;
 }
+
+
 .Desc {
     background-color: lightgray;
     padding: 2%;
@@ -69,14 +70,6 @@
     overflow: auto;
 }
 
-/* .regTxt {
-    display: flex;
-    flex-direction: column;
-    width: 75%;
-    align-items: center;
-    justify-items: center;
-    
-} */
 
 @keyframes fade-in-up {
     0% {
@@ -125,3 +118,4 @@
     align-items: center;
     justify-content: center;
 }
+
