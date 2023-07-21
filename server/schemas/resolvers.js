@@ -5,6 +5,7 @@ const personalizedFeed = require('../algorithms/feed_generator'); // Import the 
 const AWS = require('aws-sdk'); // Required for direct S3 operations
 const { v4: uuidv4 } = require('uuid');  // for generating unique filenames
 // Use the already set-up s3 instance from your s3.js file
+const { GraphQLUpload } = require('graphql-upload');
 const moderateText  = require('../utils/ai/moderateText');
 
 
@@ -73,7 +74,6 @@ const resolvers = {
   Upload: GraphQLUpload,
   Mutation: {
 
-//==============================================================================
     uploadAvatar: async (_, { avatar }, user) => {
       // Check if the user is authenticated
       if (!user) {
@@ -100,7 +100,6 @@ const resolvers = {
     
   
     },
-//=======================================================================================
 
     addUser: async (parent, { username, email, password, date_of_birth }) => {
       const user = await User.create({ username, email, password, date_of_birth });
@@ -164,10 +163,7 @@ const resolvers = {
         );
 
         return post;
-
-      }
-  },
-  
+      },
 
     likePost: async (_, { postId }, context) => {
       if (!context.user) {
@@ -189,11 +185,11 @@ const resolvers = {
     )
     .populate('likes')
     .populate({ path: 'user'});
-    
-      
 
       return updatedPost;
     },
+
+
     unlikePost: async (_, { postId }, context) => {
       if (!context.user) {
         throw new AuthenticationError('You need to be logged in to unlike a post');

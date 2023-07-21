@@ -42,10 +42,7 @@ function CreatePost() {
     setPhoto(file);
 
 
-    const file = event.target.files[0];
-    if(!file) return;
 
-    setPhoto(file); 
     // Create a new FileReader object
     let reader = new FileReader();
 
