@@ -28,6 +28,7 @@ function CreatePost() {
       setContent('');
       setPhoto(null);
       setPreview(null);
+      window.location.replace('/home');
     } catch (e) {
       console.error(e);
     }
@@ -36,7 +37,7 @@ function CreatePost() {
   const handlePhotoChange = (event) => {
     const file = event.target.files[0];
     setPhoto(file);
-    console.log(photo, "photo");
+    
 
 
 
@@ -85,26 +86,6 @@ function CreatePost() {
               />
             </Card>
           )}
-          <TextField
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            label="Post Content"
-            variant="outlined"
-            fullWidth
-            multiline
-            rows={4}
-            margin="normal"
-          />
-          <label htmlFor="upload-photo">
-            <input
-              accept="image/*"
-              id="upload-photo"
-              type="file"
-              hidden
-              onChange={handlePhotoChange}
-            />
-          </Card>
-        )}
         <TextField
         
           value={content}
