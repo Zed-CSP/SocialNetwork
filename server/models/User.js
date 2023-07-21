@@ -38,6 +38,24 @@ const UserSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  posts: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Post'
+    }
+  ],
+  likes: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Like'
+    }
+  ],
+  comments: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Comment'
+    }
+  ],
   friends: [
     {
       type: mongoose.Schema.Types.ObjectId,

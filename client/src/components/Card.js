@@ -16,9 +16,9 @@ import { GET_ME } from '../graphql/queries';
 import { LIKE_POST, UNLIKE_POST } from "../graphql/mutations";
 
 export default function PostCard({ post }) {
-
+  console.log("we are in postcard about to query for me");
   const { data, loading, error } = useQuery(GET_ME);
-
+  console.log("data in postcard", data);
   const [likePost] = useMutation(LIKE_POST);
   const [unlikePost] = useMutation(UNLIKE_POST);
 
@@ -32,19 +32,30 @@ export default function PostCard({ post }) {
 
   const handleLike = async (postId) => {
     try {
-      await likePost({ variables: { postId } });
+      await likePost({
+        variables: { postId },
+        update: (cache, { data: { likePost } }) => {
+          // Update the cache here based on the returned post data
+        }
+      });
     } catch (err) {
       console.error("Error liking post:", err);
     }
   };
-
+  
   const handleUnlike = async (postId) => {
     try {
-      await unlikePost({ variables: { postId } });
+      await unlikePost({
+        variables: { postId },
+        update: (cache, { data: { unlikePost } }) => {
+          // Update the cache here based on the returned post data
+        }
+      });
     } catch (err) {
       console.error("Error unliking post:", err);
     }
   };
+  
 
   return (
     <div className='Car'>

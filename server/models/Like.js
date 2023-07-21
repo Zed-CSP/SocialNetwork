@@ -6,13 +6,14 @@ const LikeSchema = new Schema({
     ref: 'Post',
     required: true,
   },
-  username: {
-    type: String,
-    required: true,
-  },
   createdAt: {
     type: Date,
     default: Date.now,
+  },
+  userId: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
   },
 });
 

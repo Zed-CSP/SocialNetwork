@@ -33,17 +33,25 @@ export const ADD_POST = gql`
       content
       photo
       createdAt
-      username
+      user {
+        _id
+        username
+      }
     }
   }
 `;
 
-// in graphql/mutations.js
 export const LIKE_POST = gql`
   mutation LikePost($postId: ID!) {
     likePost(postId: $postId) {
       _id
-      likes
+      likes {
+        _id
+        user {
+          _id
+          username
+        }
+      }
     }
   }
 `;
@@ -54,9 +62,15 @@ export const UNLIKE_POST = gql`
     unlikePost(postId: $postId) {
       _id
       likes {
-        username
+        _id
+        user {
+          _id
+          username
+        }
       }
     }
   }
 `;
+
+
 

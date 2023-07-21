@@ -37,6 +37,12 @@ function CreatePost() {
   const handlePhotoChange = (event) => {
 
     const file = event.target.files[0];
+    if (!file) return;
+    
+    setPhoto(file);
+
+
+    const file = event.target.files[0];
     if(!file) return;
 
     setPhoto(file); 

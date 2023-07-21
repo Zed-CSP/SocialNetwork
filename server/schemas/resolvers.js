@@ -44,8 +44,7 @@ const resolvers = {
         const userData = await User.findOne({ _id: context.user._id })
           .select('-__v -password')
           .populate('posts')
-          .populate('comments')
-          .populate('likes');
+          .populate('comments');
         return userData;
       }
       throw new AuthenticationError('Not logged in');
@@ -54,39 +53,31 @@ const resolvers = {
       return User.find()
         .select('-__v -password')
         .populate('posts')
-        .populate('comments')
-        .populate('likes');
+        .populate('comments');
     },
     user: async (parent, { username }) => {
       return User.findOne({ username })
         .select('-__v -password')
         .populate('posts')
-        .populate('comments')
-        .populate('likes');
+        .populate('comments');
     },
+    post: async (parent, { _id }) => {
+      return Post.findOne({ _id }).populate('likes').populate({ path: 'user' });
 
-    // For a single post
-post: async (parent, { _id }) => {
-  return Post.findOne({ _id }).populate('likes');
-},
-
-// For multiple posts
-posts: async (parent, { username }) => {
-  const params = username ? { username } : {};
-  return Post.find(params).sort({ createdAt: -1 }).populate('likes');
-},
-
+    },
+    posts: async (parent, { username }) => {
+      const params = username ? { username } : {};
+      return Post.find(params).sort({ createdAt: -1 }).populate('likes').populate({ path: 'user' });
+    },
   },
-  
+  Upload: GraphQLUpload,
   Mutation: {
-
     addUser: async (parent, { username, email, password, date_of_birth }) => {
       const user = await User.create({ username, email, password, date_of_birth });
       const token = signToken(user);
 
       return { token, user };
     },
-
     login: async (parent, { email, password }) => {
 
       const user = await User.findOne({ email });
@@ -132,25 +123,18 @@ posts: async (parent, { username }) => {
               throw new Error('Error uploading image to S3.');
             }
           }
-          
-          // Moderate the content of the post
-          
-  
-          // If the content couldn't be moderated (e.g., an error occurred or the AI didn't understand), don't proceed
-          if (!moderatedContent) {
-            
-              throw new Error('Unable to moderate post content.');
-          }
-  
-          const post = await Post.create({ content: content, photo: photoUrl, username: context.user.username });
-  
-          await User.findByIdAndUpdate(
-              { _id: context.user._id },
-              { $push: { posts: post._id } },
-              { new: true }
-          );
-  
-          return post;
+        }
+        const post = await Post.create({ content, photo: photoUrl, userId: context.user._id });
+        console.log("Post created:", post);
+
+        await User.findByIdAndUpdate(
+          { _id: context.user._id },
+          { $push: { posts: post._id } },
+          { new: true }
+        );
+
+        return post;
+
       }
   },
   
@@ -159,48 +143,46 @@ posts: async (parent, { username }) => {
       if (!context.user) {
         throw new AuthenticationError('You need to be logged in to like a post');
       }
-    
-      const alreadyLiked = await Like.findOne({ post: postId, username: context.user.username });
+
+      const alreadyLiked = await Like.findOne({ post: postId, userId: context.user._id });
       if (alreadyLiked) {
         throw new Error('You already liked this post');
       }
-    
-      const newLike = new Like({ post: postId, username: context.user.username });
+
+      const newLike = new Like({ post: postId, userId: context.user._id });
       await newLike.save();
-    
-      // Also update the Post's likes field
+
       const updatedPost = await Post.findByIdAndUpdate(
         postId,
-        { $addToSet: { likes: newLike._id } },  // $addToSet ensures no duplicates
+        { $addToSet: { likes: newLike._id } },
         { new: true }
-      ).populate('likes');  // populate the likes
+    )
+    .populate('likes')
+    .populate({ path: 'user'});
     
+      
+
       return updatedPost;
     },
-    
     unlikePost: async (_, { postId }, context) => {
       if (!context.user) {
         throw new AuthenticationError('You need to be logged in to unlike a post');
       }
-    
-      const like = await Like.findOneAndDelete({ post: postId, username: context.user.username });
+
+      const like = await Like.findOneAndDelete({ post: postId, userId: context.user._id });
       if (!like) {
         throw new Error('You haven\'t liked this post yet');
       }
-    
-      // Also update the Post's likes field
+
       const updatedPost = await Post.findByIdAndUpdate(
         postId,
         { $pull: { likes: like._id } },
         { new: true }
-      ).populate('likes');  // populate the likes
-    
+      ).populate('likes');
+
       return updatedPost;
     },
     
-
-
-
     deletePost: async (parent, { postId }, context) => {
       if (context.user) {
         const post = await Post.findByIdAndDelete({ _id: postId });
