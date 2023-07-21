@@ -20,7 +20,7 @@ function CreatePost() {
       const { data } = await addPost({
         variables: {
           content,
-          photo,
+          photo,git 
         },
       });
     
@@ -37,6 +37,15 @@ function CreatePost() {
   const handlePhotoChange = (event) => {
 
     const file = event.target.files[0];
+<<<<<<< HEAD
+=======
+    if (!file) return;
+    
+    setPhoto(file);
+
+
+    const file = event.target.files[0];
+>>>>>>> e54413177b546466db2fff7f3cf015d3a339355f
     if(!file) return;
 
     setPhoto(file); 

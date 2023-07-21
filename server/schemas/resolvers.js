@@ -124,9 +124,6 @@ const resolvers = {
             }
           }
         }
-
-
-
         const post = await Post.create({ content, photo: photoUrl, userId: context.user._id });
         console.log("Post created:", post);
 
@@ -137,7 +134,15 @@ const resolvers = {
         );
 
         return post;
+<<<<<<< HEAD
     },
+=======
+
+      }
+  },
+  
+
+>>>>>>> e54413177b546466db2fff7f3cf015d3a339355f
     likePost: async (_, { postId }, context) => {
       if (!context.user) {
         throw new AuthenticationError('You need to be logged in to like a post');
