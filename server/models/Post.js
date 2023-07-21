@@ -1,5 +1,6 @@
 const { Schema, model } = require('mongoose');
 
+
 const PostSchema = new Schema({
   content: {
     type: String,
@@ -20,16 +21,16 @@ const PostSchema = new Schema({
     type: Number,
     default: 0,
   },
-  comments: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: 'Comment',
-    },
-  ],
   likes: [
     {
       type: Schema.Types.ObjectId,
       ref: 'Like',
+    },
+  ],
+  comments: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Comment',
     },
   ],
   hashtags: [
