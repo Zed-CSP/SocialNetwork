@@ -38,6 +38,17 @@ const UserSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  friends: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+    }
+  ],
+  interests: [
+    {
+      type: String
+    }
+  ]
 });
 
 // set up pre-save middleware to create password hash

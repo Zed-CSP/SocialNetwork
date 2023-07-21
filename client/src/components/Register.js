@@ -26,16 +26,25 @@ export function Register() {
             const { data } = await addUser({
                 variables: { username, email, date_of_birth: dateOfBirth, password },
             });
-            
-            if(data.addUser.token){
+    
+            // Storing the token in localStorage upon successful registration
+            const token = data.addUser.token;
+
+            if (token) {
+                localStorage.setItem('id_token', token);
                 window.location.replace("/home");
+            } else {
+                console.error("Registration successful but no token received");
             }
+            
             // Handle successful registration (e.g. redirect to login page)
+            window.location.replace("/home");
         } catch (err) {
             // Handle error (e.g. show error message)
             console.error(err);
         }
     };
+    
 
     return (
         <div className="Reg">
