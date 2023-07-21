@@ -5,7 +5,7 @@ const personalizedFeed = require('../algorithms/feed_generator'); // Import the 
 const AWS = require('aws-sdk'); // Required for direct S3 operations
 const { v4: uuidv4 } = require('uuid');  // for generating unique filenames
 // Use the already set-up s3 instance from your s3.js file
-
+const moderateText  = require('../utils/ai/moderateText');
 
 
 const s3 = new AWS.S3({
@@ -44,8 +44,7 @@ const resolvers = {
         const userData = await User.findOne({ _id: context.user._id })
           .select('-__v -password')
           .populate('posts')
-          .populate('comments')
-          .populate('likes');
+          .populate('comments');
         return userData;
       }
       throw new AuthenticationError('Not logged in');
@@ -54,27 +53,26 @@ const resolvers = {
       return User.find()
         .select('-__v -password')
         .populate('posts')
-        .populate('comments')
-        .populate('likes');
+        .populate('comments');
     },
     user: async (parent, { username }) => {
       return User.findOne({ username })
         .select('-__v -password')
         .populate('posts')
-        .populate('comments')
-        .populate('likes');
-    },
-
-    posts: async (parent, { username }) => {
-      const params = username ? { username } : {};
-      return Post.find(params).sort({ createdAt: -1 });
+        .populate('comments');
     },
     post: async (parent, { _id }) => {
-      return Post.findOne({ _id });
+      return Post.findOne({ _id }).populate('likes').populate({ path: 'user' });
+
+    },
+    posts: async (parent, { username }) => {
+      const params = username ? { username } : {};
+      return Post.find(params).sort({ createdAt: -1 }).populate('likes').populate({ path: 'user' });
     },
   },
-  
+  Upload: GraphQLUpload,
   Mutation: {
+
 //==============================================================================
     uploadAvatar: async (_, { avatar }, user) => {
       // Check if the user is authenticated
@@ -103,13 +101,13 @@ const resolvers = {
   
     },
 //=======================================================================================
+
     addUser: async (parent, { username, email, password, date_of_birth }) => {
       const user = await User.create({ username, email, password, date_of_birth });
       const token = signToken(user);
 
       return { token, user };
     },
-
     login: async (parent, { email, password }) => {
 
       const user = await User.findOne({ email });
@@ -128,37 +126,36 @@ const resolvers = {
 
       return { token, user };
     },
-
     addPost: async (_, { content, photo }, context) => {
       console.log("addPost resolver");
       console.log("content:", content);
-      console.log("photo:", photo.file);
       console.log("context:", context.user);
-
+  
       if (context.user) {
+  
+          console.log(content);
+          
+          const moderatedContent = await moderateText(content);
+          console.log("Moderated content:", moderatedContent);
 
-        console.log("User is logged in. Adding post...");
-
-        let photoUrl;
-
-        // Handle the photo upload if it exists
-        if (photo) {
-
-          const { createReadStream, filename } = await photo.file;
-          const fileStream = createReadStream();
-          const uniqueFilename = uuidv4() + "-" + filename;  // generate a unique name
-
-          try {
-            photoUrl = await uploadToS3(fileStream, uniqueFilename);
-          } catch (error) {
-            console.error("Error uploading to S3:", error);
-            throw new Error('Error uploading image to S3.');
+          let photoUrl;
+          
+          // Handle the photo upload if it exists
+          if (photo) {
+            const { createReadStream, filename } = await photo.file;
+            const fileStream = createReadStream();
+            const uniqueFilename = uuidv4() + "-" + filename;  // generate a unique name
+            
+            try {
+              photoUrl = await uploadToS3(fileStream, uniqueFilename);
+            } catch (error) {
+              console.error("Error uploading to S3:", error);
+              throw new Error('Error uploading image to S3.');
+            }
           }
         }
-
-
-
-        const post = await Post.create({ content, photo: photoUrl, username: context.user.username });
+        const post = await Post.create({ content, photo: photoUrl, userId: context.user._id });
+        console.log("Post created:", post);
 
         await User.findByIdAndUpdate(
           { _id: context.user._id },
@@ -167,26 +164,55 @@ const resolvers = {
         );
 
         return post;
+
+      }
+  },
+  
+
+    likePost: async (_, { postId }, context) => {
+      if (!context.user) {
+        throw new AuthenticationError('You need to be logged in to like a post');
       }
 
-      throw new AuthenticationError('You need to be logged in!');
-    },
-
-    addLike: async (parent, { postId }, context) => {
-      if (context.user) {
-        const like = await Like.create({ username: context.user.username });
-
-        await Post.findByIdAndUpdate(
-          { _id: postId },
-          { $push: { likes: like._id } },
-          { new: true }
-        );
-
-        return like;
+      const alreadyLiked = await Like.findOne({ post: postId, userId: context.user._id });
+      if (alreadyLiked) {
+        throw new Error('You already liked this post');
       }
 
-      throw new AuthenticationError('You need to be logged in!');
+      const newLike = new Like({ post: postId, userId: context.user._id });
+      await newLike.save();
+
+      const updatedPost = await Post.findByIdAndUpdate(
+        postId,
+        { $addToSet: { likes: newLike._id } },
+        { new: true }
+    )
+    .populate('likes')
+    .populate({ path: 'user'});
+    
+      
+
+      return updatedPost;
     },
+    unlikePost: async (_, { postId }, context) => {
+      if (!context.user) {
+        throw new AuthenticationError('You need to be logged in to unlike a post');
+      }
+
+      const like = await Like.findOneAndDelete({ post: postId, userId: context.user._id });
+      if (!like) {
+        throw new Error('You haven\'t liked this post yet');
+      }
+
+      const updatedPost = await Post.findByIdAndUpdate(
+        postId,
+        { $pull: { likes: like._id } },
+        { new: true }
+      ).populate('likes');
+
+      return updatedPost;
+    },
+    
     deletePost: async (parent, { postId }, context) => {
       if (context.user) {
         const post = await Post.findByIdAndDelete({ _id: postId });

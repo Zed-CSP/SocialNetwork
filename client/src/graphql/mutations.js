@@ -33,9 +33,46 @@ export const ADD_POST = gql`
       content
       photo
       createdAt
-      username
+      user {
+        _id
+        username
+      }
     }
   }
 `;
+
+export const LIKE_POST = gql`
+  mutation LikePost($postId: ID!) {
+    likePost(postId: $postId) {
+      _id
+      likes {
+        _id
+        user {
+          _id
+          username
+        }
+      }
+    }
+  }
+`;
+
+
+
+export const UNLIKE_POST = gql`
+  mutation UnlikePost($postId: ID!) {
+    unlikePost(postId: $postId) {
+      _id
+      likes {
+        _id
+        user {
+          _id
+          username
+        }
+      }
+    }
+  }
+`;
+
+
 
 

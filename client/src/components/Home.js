@@ -8,8 +8,9 @@ import { Link } from 'react-router-dom';
 import { GET_POSTS } from "../graphql/queries";
 
 export function Home() {
+    console.log("we are in home about to query for posts");
     const { loading, error, data } = useQuery(GET_POSTS);
-
+    console.log("data in home", data);
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error.message}</p>;
 
@@ -39,11 +40,11 @@ export function Home() {
                     },
                 }}
             >
-                <div className='innerFeed' style={{ position: 'absolute', height: '70%', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', overflow: 'auto' }}>
-                    {posts.map(post => (
-                        <PostCard key={post._id} post={post} />
-                    ))}
-                </div>
+                 <div className='innerFeed' style={{ position: 'absolute', height: '70%', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', overflow: 'auto' }}>
+                {posts.map(post => (
+                    <PostCard key={post._id} post={post} likes={post.likes} />
+                ))}
+            </div>
             </Box>
         </div>
     );

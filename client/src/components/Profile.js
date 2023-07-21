@@ -1,18 +1,23 @@
+
 import { Paper, Box, Typography, Avatar, Chip, Stack, Badge, Button} from "@mui/material";
+
 import './css/HC.css'
 import pro_img from './img/stock_earth.webp';
 import CardMedia from '@mui/material/CardMedia';
 import CreateTwoToneIcon from '@mui/icons-material/CreateTwoTone';
 import FavoriteTwoToneIcon from '@mui/icons-material/FavoriteTwoTone';
 import ChatBubbleTwoToneIcon from '@mui/icons-material/ChatBubbleTwoTone';
+
 import { useState, useRef } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
 import{UPLOAD_AVATAR, GET_USER} from "../graphql/queries";
 
 
+
 // const hi = '10';
 
 export function Profile() {
+
 
   // load profile picture/avatar
   // const { loading, error, data } = useQuery(GET_ME);
@@ -62,12 +67,15 @@ const [avatarFile, setAvatarFile] = useState(null);
   const hasProfilePicture = !!user.profile_picture;
   
 
+
   return (
     <div className="Pro" style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center'  }}>
       <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+
                   <Chip icon={<FavoriteTwoToneIcon/>} style={{marginRight: '20%', color: 'white', }} color='secondary'  label={user.likes}/>
                   <Chip icon={<ChatBubbleTwoToneIcon/>} style={{color: 'white'}} label={user.comments} color="primary"/>
                   <Chip icon={<CreateTwoToneIcon/>} style={{marginLeft: '20%', color: 'white'}} label={user.posts} color="success"/>
+
       </div>
       <Box
         sx={{
@@ -76,15 +84,13 @@ const [avatarFile, setAvatarFile] = useState(null);
           overflow: 'auto',
           borderRadius: '15px',
           padding: '2%',
-          
           height: '70vh',
           width: '100vw',
-          
         }}
       >
-        
-        <Paper elevation={0} sx={{ p: 2, flex:1 }} style={{   position: 'relative', backgroundColor: 'rgba(128, 128, 128, 0.0)', borderRadius: '15px'  }}>
+        <Paper elevation={0} sx={{ p: 2, flex:1 }} style={{ position: 'relative', backgroundColor: 'rgba(128, 128, 128, 0.0)', borderRadius: '15px' }}>
           <div style={{ display: 'flex', flexWrap: 'wrap', flexDirection:'column' ,alignItems: 'center', justifyContent: 'center', marginBottom: '16px' }}>
+
           <input type="file" accept="image/*" onChange={handleCardMediaFileChange} style={{ display: 'none' }} ref={cardMediaFileInputRef} />
             <CardMedia sx={{ height: '30vh', width: '100%', border: '3px solid white', borderRadius: '15px', cursor: 'pointer'}} image={cardMediaFile ? URL.createObjectURL(cardMediaFile) : pro_img}
               onClick={() => cardMediaFileInputRef.current.click()} />
@@ -101,19 +107,19 @@ const [avatarFile, setAvatarFile] = useState(null);
             {avatarFile && (
               <Button onClick={handleUploadAvatar} style={{}}>Upload Avatar</Button>
             )}
-          </div>
 
+          </div>
           <div className="secondary" style={{display: 'flex', padding: '2%'}}>
+
           <Typography style={{marginTop: '1%', padding: '1%', backgroundColor: 'rgba(128, 128, 128, 0.6)', borderRadius: '15px',  margin: '3%'}} variant="h6" gutterBottom>
               {user.username}
           </Typography>
-          </div>
 
+          </div>
         </Paper>
       </Box>
     </div>
   );
 }
-
 
 export default Profile;

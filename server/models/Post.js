@@ -1,44 +1,38 @@
 const { Schema, model } = require('mongoose');
 
-const PostSchema = new Schema({
+const postSchema = new Schema({
   content: {
     type: String,
-    required: true,
+    required: true
   },
-  photo: {  // for storing the S3 URL of the image.
-    type: String,
+  photo: {
+    type: String
   },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-  username: {
-    type: String,
-    required: true,
+  user: {  
+    type: Schema.Types.ObjectId,
+    ref: 'User'
   },
   volume: {
     type: Number,
-    default: 0,
+    default: 0
   },
-  comments: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: 'Comment',
-    },
-  ],
-  likes: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: 'Like',
-    },
-  ],
-  hashtags: [
-    {
-      type: String,
-    },
-  ],
+  likes: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Like'
+  }],
+  comments: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Comment'
+  }],
+  hashtags: [{
+    type: String
+  }],
+  createdAt: {
+    type: Date,
+    default: Date.now
+  }
 });
 
-const Post = model('Post', PostSchema);
+const Post = model('Post', postSchema);
 
 module.exports = Post;
