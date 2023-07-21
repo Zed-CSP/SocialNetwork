@@ -4,6 +4,7 @@ import { TextField, Button, Box, Card, CardMedia } from '@mui/material';
 import { ADD_POST } from '../graphql/mutations';
 
 
+
 function CreatePost() {
   const [content, setContent] = useState('');
   const [photo, setPhoto] = useState(null);
@@ -13,7 +14,6 @@ function CreatePost() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-
       console.log("photo", photo);
       console.log("content", content);
 
@@ -23,6 +23,7 @@ function CreatePost() {
           photo,
         },
       });
+    
       console.log(data);
       setContent('');
       setPhoto(null);
@@ -35,16 +36,16 @@ function CreatePost() {
 
   const handlePhotoChange = (event) => {
 
-    
-
     const file = event.target.files[0];
     if (!file) return;
     
     setPhoto(file);
 
 
-    
+    const file = event.target.files[0];
+    if(!file) return;
 
+    setPhoto(file); 
     // Create a new FileReader object
     let reader = new FileReader();
 
@@ -54,8 +55,8 @@ function CreatePost() {
     // Set the preview state to the result once reading is finished
     reader.onloadend = () => {
       setPreview(reader.result);
+      };
     };
-  };
 
   return (
     <div className='Cre'>

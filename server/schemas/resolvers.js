@@ -1,10 +1,12 @@
 const { User, Post, Comment, Like } = require('../models');
 const { signToken } = require('../utils/auth');
-const { AuthenticationError } = require('apollo-server-express');
-const personalizedFeed = require('../algorithms/feed_generator');
-const AWS = require('aws-sdk');
-const { v4: uuidv4 } = require('uuid');
-const GraphQLUpload = require('graphql-upload');
+const { AuthenticationError } = require('apollo-server-express'); // Make sure to import this.
+const personalizedFeed = require('../algorithms/feed_generator'); // Import the feed generator
+const AWS = require('aws-sdk'); // Required for direct S3 operations
+const { v4: uuidv4 } = require('uuid');  // for generating unique filenames
+// Use the already set-up s3 instance from your s3.js file
+const moderateText  = require('../utils/ai/moderateText');
+
 
 const s3 = new AWS.S3({
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -98,34 +100,30 @@ const resolvers = {
       console.log("addPost resolver");
       console.log("content:", content);
       console.log("context:", context.user);
-
+  
       if (context.user) {
+  
+          console.log(content);
+          
+          const moderatedContent = await moderateText(content);
+          console.log("Moderated content:", moderatedContent);
 
-        console.log("User is logged in. Adding post...");
-
-        let photoUrl;
-
-        // handle moderation take text and send to openai api to get if it passes or not
-
-
-
-        // Handle the photo upload if it exists
-        if (photo) {
-
-          const { createReadStream, filename } = await photo.file;
-          const fileStream = createReadStream();
-          const uniqueFilename = uuidv4() + "-" + filename;  // generate a unique name
-
-          try {
-            photoUrl = await uploadToS3(fileStream, uniqueFilename);
-          } catch (error) {
-            console.error("Error uploading to S3:", error);
-            throw new Error('Error uploading image to S3.');
+          let photoUrl;
+          
+          // Handle the photo upload if it exists
+          if (photo) {
+            const { createReadStream, filename } = await photo.file;
+            const fileStream = createReadStream();
+            const uniqueFilename = uuidv4() + "-" + filename;  // generate a unique name
+            
+            try {
+              photoUrl = await uploadToS3(fileStream, uniqueFilename);
+            } catch (error) {
+              console.error("Error uploading to S3:", error);
+              throw new Error('Error uploading image to S3.');
+            }
           }
         }
-
-
-
         const post = await Post.create({ content, photo: photoUrl, userId: context.user._id });
         console.log("Post created:", post);
 
@@ -136,10 +134,10 @@ const resolvers = {
         );
 
         return post;
-      }
 
-      throw new AuthenticationError('You need to be logged in!');
-    },
+      }
+  },
+  
 
     likePost: async (_, { postId }, context) => {
       if (!context.user) {
