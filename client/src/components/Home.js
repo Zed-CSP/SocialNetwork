@@ -39,11 +39,11 @@ export function Home() {
                     },
                 }}
             >
-                <div className='innerFeed' style={{ position: 'absolute', height: '70%', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', overflow: 'auto' }}>
-                    {posts.map(post => (
-                        <PostCard key={post._id} post={post} />
-                    ))}
-                </div>
+                 <div className='innerFeed' style={{ position: 'absolute', height: '70%', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', overflow: 'auto' }}>
+                {posts.map(post => (
+                    <PostCard key={post._id} post={post} likes={post.likes} />
+                ))}
+            </div>
             </Box>
         </div>
     );

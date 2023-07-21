@@ -65,13 +65,17 @@ const resolvers = {
         .populate('likes');
     },
 
-    posts: async (parent, { username }) => {
-      const params = username ? { username } : {};
-      return Post.find(params).sort({ createdAt: -1 });
-    },
-    post: async (parent, { _id }) => {
-      return Post.findOne({ _id });
-    },
+    // For a single post
+post: async (parent, { _id }) => {
+  return Post.findOne({ _id }).populate('likes');
+},
+
+// For multiple posts
+posts: async (parent, { username }) => {
+  const params = username ? { username } : {};
+  return Post.find(params).sort({ createdAt: -1 }).populate('likes');
+},
+
   },
   Upload: GraphQLUpload,
   Mutation: {
@@ -99,7 +103,6 @@ const resolvers = {
 
       return { token, user };
     },
-
     addPost: async (_, { content, photo }, context) => {
       console.log("addPost resolver");
       console.log("content:", content);
@@ -111,6 +114,10 @@ const resolvers = {
         console.log("User is logged in. Adding post...");
 
         let photoUrl;
+
+        // handle moderation take text and send to openai api to get if it passes or not
+
+
 
         // Handle the photo upload if it exists
         if (photo) {
@@ -143,21 +150,52 @@ const resolvers = {
       throw new AuthenticationError('You need to be logged in!');
     },
 
-    addLike: async (parent, { postId }, context) => {
-      if (context.user) {
-        const like = await Like.create({ username: context.user.username });
-
-        await Post.findByIdAndUpdate(
-          { _id: postId },
-          { $push: { likes: like._id } },
-          { new: true }
-        );
-
-        return like;
+    likePost: async (_, { postId }, context) => {
+      if (!context.user) {
+        throw new AuthenticationError('You need to be logged in to like a post');
       }
-
-      throw new AuthenticationError('You need to be logged in!');
+    
+      const alreadyLiked = await Like.findOne({ post: postId, username: context.user.username });
+      if (alreadyLiked) {
+        throw new Error('You already liked this post');
+      }
+    
+      const newLike = new Like({ post: postId, username: context.user.username });
+      await newLike.save();
+    
+      // Also update the Post's likes field
+      const updatedPost = await Post.findByIdAndUpdate(
+        postId,
+        { $addToSet: { likes: newLike._id } },  // $addToSet ensures no duplicates
+        { new: true }
+      ).populate('likes');  // populate the likes
+    
+      return updatedPost;
     },
+    
+    unlikePost: async (_, { postId }, context) => {
+      if (!context.user) {
+        throw new AuthenticationError('You need to be logged in to unlike a post');
+      }
+    
+      const like = await Like.findOneAndDelete({ post: postId, username: context.user.username });
+      if (!like) {
+        throw new Error('You haven\'t liked this post yet');
+      }
+    
+      // Also update the Post's likes field
+      const updatedPost = await Post.findByIdAndUpdate(
+        postId,
+        { $pull: { likes: like._id } },
+        { new: true }
+      ).populate('likes');  // populate the likes
+    
+      return updatedPost;
+    },
+    
+
+
+
     deletePost: async (parent, { postId }, context) => {
       if (context.user) {
         const post = await Post.findByIdAndDelete({ _id: postId });

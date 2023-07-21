@@ -38,3 +38,25 @@ export const ADD_POST = gql`
   }
 `;
 
+// in graphql/mutations.js
+export const LIKE_POST = gql`
+  mutation LikePost($postId: ID!) {
+    likePost(postId: $postId) {
+      _id
+      likes
+    }
+  }
+`;
+
+
+export const UNLIKE_POST = gql`
+  mutation UnlikePost($postId: ID!) {
+    unlikePost(postId: $postId) {
+      _id
+      likes {
+        username
+      }
+    }
+  }
+`;
+

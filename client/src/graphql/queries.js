@@ -8,6 +8,23 @@ export const GET_POSTS = gql`
       photo
       createdAt
       username
+      likes {
+        username
+      }
     }
   }
+`;
+
+// rest of the queries...
+
+ 
+export const GET_ME = gql`
+query GetMe {
+    me {
+      username
+      email
+      _id
+    }
+  }
+  
 `;

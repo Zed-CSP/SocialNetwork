@@ -28,18 +28,22 @@ scalar Upload
     username: String
     volume: Int
     comments: [Comment] 
-    likes: [Like]
+    likes: [String]
   }
+
+  type Like {
+    _id: ID
+    username: String!
+    post: ID!
+    createdAt: String
+}
+
+
 
   type Comment {
     _id: ID
     content: String
     createdAt: String
-    username: String
-  }
-
-  type Like {
-    _id: ID
     username: String
   }
 
@@ -63,7 +67,8 @@ scalar Upload
     addUser(username: String!, email: String!, date_of_birth: String!, password: String!): Auth
     addPost(content: String!, photo: Upload): Post 
     addComment(postId: ID!, content: String!): Post
-    addLike(postId: ID!): Post
+    likePost(postId: ID!): Post
+    unlikePost(postId: ID!): Post
     deletePost(postId: ID!): User
   }
 `;
