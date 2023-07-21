@@ -26,7 +26,7 @@
   width: 100vw;
   position: absolute;
   z-index: 2;
-  overflow: hidden;
+  overflow: auto;
 }
 
 .Switch {

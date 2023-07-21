@@ -75,7 +75,34 @@ const resolvers = {
   },
   
   Mutation: {
+//==============================================================================
+    uploadAvatar: async (_, { avatar }, user) => {
+      // Check if the user is authenticated
+      if (!user) {
+        throw new AuthenticationError('You need to be logged in!');
+      }
 
+      if (!avatar) {
+        throw new Error('Please provide an image file.');
+      }
+
+      const { createReadStream, filename } = await avatar.file;
+      const fileStream = createReadStream();
+      const uniqueFilename = uuidv4() + '-' + filename; // Generate a unique name
+
+      try {
+        const avatarUrl = await uploadToS3(fileStream, uniqueFilename);
+        // Update the user's profile_picture field with the new URL
+        await User.findByIdAndUpdate(user._id, { profile_picture: avatarUrl });
+        return true;
+      } catch (error) {
+        console.error('Error uploading avatar:', error);
+        throw new Error('Error uploading avatar.');
+      }
+    
+  
+    },
+//=======================================================================================
     addUser: async (parent, { username, email, password, date_of_birth }) => {
       const user = await User.create({ username, email, password, date_of_birth });
       const token = signToken(user);

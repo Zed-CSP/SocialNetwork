@@ -65,6 +65,8 @@ scalar Upload
     addComment(postId: ID!, content: String!): Post
     addLike(postId: ID!): Post
     deletePost(postId: ID!): User
+    uploadAvatar(avatar: Upload!): Boolean
+    uploadCardMedia(cardmedia: Upload!): Boolean
   }
 `;
 

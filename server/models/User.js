@@ -48,7 +48,8 @@ const UserSchema = new mongoose.Schema({
     {
       type: String
     }
-  ]
+  ],
+  
 });
 
 // set up pre-save middleware to create password hash
