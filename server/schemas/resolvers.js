@@ -5,7 +5,7 @@ const personalizedFeed = require('../algorithms/feed_generator'); // Import the 
 const AWS = require('aws-sdk'); // Required for direct S3 operations
 const { v4: uuidv4 } = require('uuid');  // for generating unique filenames
 // Use the already set-up s3 instance from your s3.js file
-
+const moderateText  = require('../utils/ai/moderateText');
 
 
 const s3 = new AWS.S3({
@@ -108,49 +108,52 @@ posts: async (parent, { username }) => {
     addPost: async (_, { content, photo }, context) => {
       console.log("addPost resolver");
       console.log("content:", content);
-      console.log("photo:", photo.file);
       console.log("context:", context.user);
-
+  
       if (context.user) {
+  
+          console.log(content);
+          
+          const moderatedContent = await moderateText(content);
+          console.log("Moderated content:", moderatedContent);
 
-        console.log("User is logged in. Adding post...");
-
-        let photoUrl;
-
-        // handle moderation take text and send to openai api to get if it passes or not
-
-
-
-        // Handle the photo upload if it exists
-        if (photo) {
-
-          const { createReadStream, filename } = await photo.file;
-          const fileStream = createReadStream();
-          const uniqueFilename = uuidv4() + "-" + filename;  // generate a unique name
-
-          try {
-            photoUrl = await uploadToS3(fileStream, uniqueFilename);
-          } catch (error) {
-            console.error("Error uploading to S3:", error);
-            throw new Error('Error uploading image to S3.');
+          let photoUrl;
+          
+          // Handle the photo upload if it exists
+          if (photo) {
+            const { createReadStream, filename } = await photo.file;
+            const fileStream = createReadStream();
+            const uniqueFilename = uuidv4() + "-" + filename;  // generate a unique name
+            
+            try {
+              photoUrl = await uploadToS3(fileStream, uniqueFilename);
+            } catch (error) {
+              console.error("Error uploading to S3:", error);
+              throw new Error('Error uploading image to S3.');
+            }
           }
-        }
-
-
-
-        const post = await Post.create({ content, photo: photoUrl, username: context.user.username });
-
-        await User.findByIdAndUpdate(
-          { _id: context.user._id },
-          { $push: { posts: post._id } },
-          { new: true }
-        );
-
-        return post;
+          
+          // Moderate the content of the post
+          
+  
+          // If the content couldn't be moderated (e.g., an error occurred or the AI didn't understand), don't proceed
+          if (!moderatedContent) {
+            
+              throw new Error('Unable to moderate post content.');
+          }
+  
+          const post = await Post.create({ content: content, photo: photoUrl, username: context.user.username });
+  
+          await User.findByIdAndUpdate(
+              { _id: context.user._id },
+              { $push: { posts: post._id } },
+              { new: true }
+          );
+  
+          return post;
       }
-
-      throw new AuthenticationError('You need to be logged in!');
-    },
+  },
+  
 
     likePost: async (_, { postId }, context) => {
       if (!context.user) {
