@@ -32,6 +32,11 @@ const PostSchema = new Schema({
       ref: 'Like',
     },
   ],
+  hashtags: [
+    {
+      type: String,
+    },
+  ],
 });
 
 const Post = model('Post', PostSchema);

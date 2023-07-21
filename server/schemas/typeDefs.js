@@ -49,12 +49,14 @@ scalar Upload
   }
 
   type Query {
+    userFeed: [Post] #might need adjustment
     me: User
     users: [User]
     user(username: String!): User
     posts: [Post]
     post(_id: ID!): Post
   }
+  
 
   type Mutation {
     login(email: String!, password: String!): Auth

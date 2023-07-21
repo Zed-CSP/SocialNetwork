@@ -14,9 +14,8 @@ function CreatePost() {
     event.preventDefault();
     try {
 
-      console.log("photo type", typeof photo);
-      console.log("photo content", photo);
-
+      console.log("photo", photo);
+      console.log("content", content);
 
       const { data } = await addPost({
         variables: {
@@ -37,9 +36,9 @@ function CreatePost() {
   const handlePhotoChange = (event) => {
     const file = event.target.files[0];
     setPhoto(file);
+
+
     
-
-
 
     // Create a new FileReader object
     let reader = new FileReader();
@@ -86,6 +85,7 @@ function CreatePost() {
               />
             </Card>
           )}
+
         <TextField
         
           value={content}

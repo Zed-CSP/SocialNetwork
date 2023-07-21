@@ -1,7 +1,7 @@
 const { User, Post, Comment, Like } = require('../models');
 const { signToken } = require('../utils/auth');
 const { AuthenticationError } = require('apollo-server-express'); // Make sure to import this.
-
+const personalizedFeed = require('../algorithms/feed_generator'); // Import the feed generator
 const AWS = require('aws-sdk'); // Required for direct S3 operations
 const { v4: uuidv4 } = require('uuid');  // for generating unique filenames
 // Use the already set-up s3 instance from your s3.js file
@@ -33,19 +33,21 @@ const uploadToS3 = async (fileStream, filename) => {
 
 const resolvers = {
   Query: {
+    userFeed: async (_, __, context) => {
+      if (!context.user) {
+        throw new Error('Authentication required!');
+      }
+      return await personalizedFeed(context.user._id);
+    },
     me: async (parent, args, context) => {
       if (context.user) {
         const userData = await User.findOne({ _id: context.user._id })
           .select('-__v -password')
           .populate('posts')
           .populate('comments')
-          .populate('likes')
-          .populate('voice')
-          .populate('currency');
-
+          .populate('likes');
         return userData;
       }
-
       throw new AuthenticationError('Not logged in');
     },
     users: async () => {
@@ -53,17 +55,16 @@ const resolvers = {
         .select('-__v -password')
         .populate('posts')
         .populate('comments')
-        .populate('likes')
-        .populate('voice');
+        .populate('likes');
     },
     user: async (parent, { username }) => {
       return User.findOne({ username })
         .select('-__v -password')
         .populate('posts')
         .populate('comments')
-        .populate('likes')
-        .populate('voice');
+        .populate('likes');
     },
+
     posts: async (parent, { username }) => {
       const params = username ? { username } : {};
       return Post.find(params).sort({ createdAt: -1 });
@@ -81,7 +82,7 @@ const resolvers = {
 
       return { token, user };
     },
-    
+
     login: async (parent, { email, password }) => {
 
       const user = await User.findOne({ email });
@@ -110,7 +111,7 @@ const resolvers = {
       if (context.user) {
 
         console.log("User is logged in. Adding post...");
-        
+
         let photoUrl;
 
         // Handle the photo upload if it exists
