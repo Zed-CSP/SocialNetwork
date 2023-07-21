@@ -1,76 +1,71 @@
-// typeDefs.js
-
 const { gql } = require('apollo-server-express');
 
-const typeDefs = gql`
-
-scalar Upload
 
 
-  type User {
-    _id: ID
-    username: String
-    email: String
-    date_of_birth: String
-    password: String
-    profile_picture: String
+  const typeDefs = gql`
+
+  scalar Upload
+
+    type User {
+    _id: ID!
+    username: String!
+    email: String!
+    date_of_birth: String!
     posts: [Post]
-    voice: Int
-    currency: Int
-    naughtyCount: Int
+    comments: [Comment]
   }
 
   type Post {
-    _id: ID
-    content: String
+    _id: ID!
+    content: String!
     photo: String
-    createdAt: String
-    username: String
-    volume: Int
-    comments: [Comment] 
-    likes: [String]
+    user: User 
+    volume: Int!
+    likes: [Like]
+    comments: [Comment]
+    hashtags: [String]
+    createdAt: String!
+  }
+
+  type Comment {
+    _id: ID!
+    content: String!
+    user: User!
+    post: Post!
+    createdAt: String!
   }
 
   type Like {
-    _id: ID
-    username: String!
-    post: ID!
-    createdAt: String
+    _id: ID!
+    user: User
+    post: Post!
+    createdAt: String!
 }
 
 
+type Auth {
+  token: ID!
+  user: User
+}
 
-  type Comment {
-    _id: ID
-    content: String
-    createdAt: String
-    username: String
-  }
+type Query {
+  userFeed: [Post]
+  me: User
+  users: [User]
+  user(username: String!): User
+  posts(username: String): [Post]
+  post(_id: ID!): Post
+}
 
-  type Auth {
-    token: ID!
-    user: User
-  }
-
-  type Query {
-    userFeed: [Post] #might need adjustment
-    me: User
-    users: [User]
-    user(username: String!): User
-    posts: [Post]
-    post(_id: ID!): Post
-  }
-  
-
-  type Mutation {
-    login(email: String!, password: String!): Auth
-    addUser(username: String!, email: String!, date_of_birth: String!, password: String!): Auth
-    addPost(content: String!, photo: Upload): Post 
-    addComment(postId: ID!, content: String!): Post
-    likePost(postId: ID!): Post
-    unlikePost(postId: ID!): Post
-    deletePost(postId: ID!): User
-  }
+type Mutation {
+  login(email: String!, password: String!): Auth
+  addUser(username: String!, email: String!, date_of_birth: String!, password: String!): Auth
+  addPost(content: String!, photo: Upload): Post 
+  addComment(postId: ID!, content: String!): Post
+  likePost(postId: ID!): Post
+  unlikePost(postId: ID!): Post
+  deletePost(postId: ID!): User
+}
 `;
 
 module.exports = typeDefs;
