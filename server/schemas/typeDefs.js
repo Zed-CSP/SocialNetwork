@@ -65,7 +65,10 @@ type Mutation {
   likePost(postId: ID!): Post
   unlikePost(postId: ID!): Post
   deletePost(postId: ID!): User
+  uploadAvatar(avatar: Upload!): Boolean
+  uploadCardMedia(cardmedia: Upload!): Boolean
 }
+
 `;
 
 module.exports = typeDefs;

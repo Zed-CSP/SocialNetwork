@@ -57,6 +57,7 @@ export const LIKE_POST = gql`
 `;
 
 
+
 export const UNLIKE_POST = gql`
   mutation UnlikePost($postId: ID!) {
     unlikePost(postId: $postId) {
@@ -71,6 +72,7 @@ export const UNLIKE_POST = gql`
     }
   }
 `;
+
 
 
 
