@@ -27,7 +27,6 @@ function CreatePost() {
       setContent('');
       setPhoto(null);
       setPreview(null);
-      //send user to /home
       window.location.replace('/home');
     } catch (e) {
       console.error(e);
@@ -37,6 +36,7 @@ function CreatePost() {
   const handlePhotoChange = (event) => {
     const file = event.target.files[0];
     setPhoto(file);
+
 
     
 
@@ -54,40 +54,38 @@ function CreatePost() {
 
   return (
     <div className='Cre'>
-    <Box 
-    className='cratecase'
-    sx={{
-      display: 'flex',
-      flexWrap: 'wrap',
-      // overflow: 'auto',
-      // outline: "solid white",
-      borderRadius: '15px',
-      padding: '2%',
-      margin: '1%',
-      height: '80vh',
-      width: '100vw',
-      alignItems: 'center',
-      justifyContent: 'center',
-      backgroundColor: 'rgba(128, 128, 128, 0.6)',
-      '& > :not(style)': {
-        m: 4,
-        height: 400,
-        p: '2%',
-      },
-      
-    }}>
-      <form onSubmit={handleSubmit}>
-        {preview && (
-          <Card sx={{ maxWidth: 345, marginBottom: 1 }}>
-            <CardMedia
-            sx={{height: '30vh', width: '40vw'}}
-              component="img"
-              height="140"
-              image={preview}
-              alt="Preview"
-            />
-          </Card>
-        )}
+      <Box
+        className='cratecase'
+        sx={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          borderRadius: '15px',
+          padding: '2%',
+          margin: '1%',
+          height: '80vh',
+          width: '100vw',
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: 'rgba(220, 220, 220, 0.5)',
+          '& > :not(style)': {
+            m: 4,
+            height: 400,
+            p: '2%',
+          },
+        }}>
+        <form onSubmit={handleSubmit}>
+          {preview && (
+            <Card sx={{ maxWidth: 345, marginBottom: 1 }}>
+              <CardMedia
+                sx={{ height: '30vh', width: '40vw' }}
+                component="img"
+                height="140"
+                image={preview}
+                alt="Preview"
+              />
+            </Card>
+          )}
+
         <TextField
         
           value={content}

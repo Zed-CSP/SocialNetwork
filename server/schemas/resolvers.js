@@ -5,7 +5,7 @@ const personalizedFeed = require('../algorithms/feed_generator'); // Import the 
 const AWS = require('aws-sdk'); // Required for direct S3 operations
 const { v4: uuidv4 } = require('uuid');  // for generating unique filenames
 // Use the already set-up s3 instance from your s3.js file
-const GraphQLUpload = require('graphql-upload');
+
 
 
 const s3 = new AWS.S3({
@@ -73,14 +73,16 @@ const resolvers = {
       return Post.findOne({ _id });
     },
   },
-  Upload: GraphQLUpload,
+  
   Mutation: {
+
     addUser: async (parent, { username, email, password, date_of_birth }) => {
       const user = await User.create({ username, email, password, date_of_birth });
       const token = signToken(user);
 
       return { token, user };
     },
+
     login: async (parent, { email, password }) => {
 
       const user = await User.findOne({ email });
