@@ -10,7 +10,7 @@ import ChatBubbleTwoToneIcon from '@mui/icons-material/ChatBubbleTwoTone';
 import PostCard from "./Card";
 import { useState, useRef } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
-import{UPLOAD_AVATAR, GET_USER, GET_POSTS_USERNAME} from "../graphql/queries";
+import{UPLOAD_AVATAR, GET_USER, GET_POSTS } from "../graphql/queries";
 import jwt_decode from "jwt-decode";
 
 
@@ -68,7 +68,7 @@ const [avatarFile, setAvatarFile] = useState(null);
 
   console.log(username);
 
-  const { loading, error, data } = useQuery(GET_POSTS_USERNAME, {
+  const { loading, error, data } = useQuery(GET_POSTS, {
     variables: { username }, // Pass the username variable here
   });
 
@@ -128,14 +128,15 @@ const [avatarFile, setAvatarFile] = useState(null);
           </Typography>
 
 
+          
+              
+          </div>
           <div className="userPost">
 
           {posts.map((post) => (
             <PostCard key={post._id} post={post} likes={post.likes} />
           ))}
 
-          </div>
-              
           </div>
         </Paper>
       </Box>
