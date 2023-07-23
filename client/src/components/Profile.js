@@ -14,7 +14,7 @@ import{UPLOAD_AVATAR, GET_USER} from "../graphql/queries";
 
 
 
-// const hi = '10';
+const hi = '10';
 
 export function Profile() {
 
@@ -60,11 +60,11 @@ const [avatarFile, setAvatarFile] = useState(null);
     }
   };
 
-  const { loading, error, data } = useQuery(GET_USER);
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error.message}</p>;
-  const user = data.me;
-  const hasProfilePicture = !!user.profile_picture;
+  // const { loading, error, data } = useQuery(GET_USER);
+  // if (loading) return <p>Loading...</p>;
+  // if (error) return <p>Error: {error.message}</p>;
+  // const user = data.me;
+  // const hasProfilePicture = !!user.profile_picture;
   
 
 
@@ -72,9 +72,9 @@ const [avatarFile, setAvatarFile] = useState(null);
     <div className="Pro" style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center'  }}>
       <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
 
-                  <Chip icon={<FavoriteTwoToneIcon/>} style={{marginRight: '20%', color: 'white', }} color='secondary'  label={user.likes}/>
-                  <Chip icon={<ChatBubbleTwoToneIcon/>} style={{color: 'white'}} label={user.comments} color="primary"/>
-                  <Chip icon={<CreateTwoToneIcon/>} style={{marginLeft: '20%', color: 'white'}} label={user.posts} color="success"/>
+                  <Chip icon={<FavoriteTwoToneIcon/>} style={{marginRight: '20%', color: 'white', }} color='secondary'  label={hi}/>
+                  <Chip icon={<ChatBubbleTwoToneIcon/>} style={{color: 'white'}} label={hi} color="primary"/>
+                  <Chip icon={<CreateTwoToneIcon/>} style={{marginLeft: '20%', color: 'white'}} label={hi} color="success"/>
 
       </div>
       <Box
@@ -99,7 +99,7 @@ const [avatarFile, setAvatarFile] = useState(null);
             <Avatar sx={{ width: 60, height: 60, position:'absolute', bottom: '30vh', border: '2px solid white', cursor: 'pointer' }} onClick={() => avatarFileInputRef.current.click()}>  {/*() => avatarFileInputRef.current.click()*/}
             
             <input type="file" accept="image/*" onChange={handleAvatarFileChange} style={{ display: 'none' }} ref={avatarFileInputRef} />
-            {hasProfilePicture && <img src={user.profile_picture} alt="Profile Avatar" />}
+            {/* {hasProfilePicture && <img src={user.profile_picture} alt="Profile Avatar" />} */}
             {avatarFile && ( 
                 <img src={URL.createObjectURL(avatarFile)} alt="Uploaded Avatar" style={{ width: '100%', height: '100%', borderRadius: '50%' }} />
               )}
@@ -112,7 +112,7 @@ const [avatarFile, setAvatarFile] = useState(null);
           <div className="secondary" style={{display: 'flex', padding: '2%'}}>
 
           <Typography style={{marginTop: '1%', padding: '1%', backgroundColor: 'rgba(128, 128, 128, 0.6)', borderRadius: '15px',  margin: '3%'}} variant="h6" gutterBottom>
-              {user.username}
+              {hi}
           </Typography>
 
           </div>
