@@ -117,6 +117,7 @@ const resolvers = {
 
     },
 
+    // WORKS FOR NOW DONT TOUCH
     addUser: async (parent, { username, email, password, date_of_birth }) => {
       const user = await User.create({ username, email, password, date_of_birth });
       const token = signToken(user);
@@ -143,15 +144,15 @@ const resolvers = {
     },
     addPost: async (_, { content, photo }, context) => {
       console.log("addPost resolver");
-      
+
 
       let photoUrl;
       if (context.user) {
         console.log(content);
 
         const moderatedContent = await moderateText(content);
-        
-        if(moderatedContent === "0") {
+
+        if (moderatedContent === "0") {
           throw new Error('Your post contains inappropriate content.');
           return;
         }
@@ -181,19 +182,22 @@ const resolvers = {
             throw new Error('Error uploading image to S3.');
           }
         }
-      }
-      const post = await Post.create({ content, photo: photoUrl, userId: context.user._id });
-      console.log("Post created:", post);
 
-      await User.findByIdAndUpdate(
-        { _id: context.user._id },
-        { $push: { posts: post._id } },
-        { new: true }
-      );
+        console.log("context.user:", context.user._id);
 
+        const post = await Post.create({ content, photo: photoUrl, user: context.user._id });
+
+        console.log("Post created:", post);
+
+        await User.findByIdAndUpdate(
+          { _id: context.user._id },
+          { $push: { posts: post._id } },
+          { new: true }
+        );
+        console.log("User updated");
       return post;
+     } 
     },
-
     likePost: async (_, { postId }, context) => {
       if (!context.user) {
         throw new AuthenticationError('You need to be logged in to like a post');
@@ -243,12 +247,6 @@ const resolvers = {
 
       return updatedPost;
     },
-
-
-
-
-
-
     addComment: async (_, { postId, content }, context) => {
       console.log("addComment resolver");
       console.log("postId:", postId);
@@ -306,6 +304,54 @@ const resolvers = {
         console.error('Error saving the comment:', error);
         throw new Error('There was an issue adding the comment. Please try again later.');
       }
+    },
+
+
+
+
+
+    deleteComment: async (_, { postId, commentId }, context) => {
+      console.log("postId:", postId);
+      console.log("commentId:", commentId);
+
+      // Fetch the comment and post from the database
+      const comment = await Comment.findById(commentId);
+      const post = await Post.findById(postId);
+
+      if (!comment) {
+        throw new Error('Comment not found');
+      }
+      if (!post) {
+        throw new Error('Post not found');
+      }
+
+
+      // Convert context.user._id to a string
+      const currentUserId = context.user._id;
+      const postUserId = post.user;
+
+      console.log("currentUserId:", currentUserId);
+      console.log("postUserId:", postUserId);
+
+
+      if (commentUserId !== currentUserId && postUserId !== currentUserId) {
+        throw new AuthenticationError('You can only delete comments that you posted or on your own posts.');
+      }
+
+
+      await Comment.findByIdAndDelete(commentId);
+
+      console.log("Deleted comment with ID:", commentId);
+
+      const updatedPost = await Post.findByIdAndUpdate(
+        postId,
+        { $pull: { comments: commentId } },
+        { new: true }
+      )
+        .populate('comments')
+        .populate({ path: 'comments.user' }); // <-- populate the user for each comment
+
+      return updatedPost;
     },
 
 
