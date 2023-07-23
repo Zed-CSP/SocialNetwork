@@ -80,6 +80,8 @@ export default function PostCard({ post }) {
             return; // Exit if post data is not in the cache
           }
 
+          console.log("existingPostData", existingPostData);
+
           const updatedPost = {
             ...existingPostData.post,
             comments: [...existingPostData.post.comments, newComment]
@@ -122,15 +124,25 @@ export default function PostCard({ post }) {
             query: GET_POST_BY_ID,
             variables: { id: postId },
           });
+
+       console.log("success maybe?")   
+
+       
+
           if (!existingPostData || !existingPostData.post) {
             return; // Exit if post data is not in the cache
           }
+
+      
+
           const updatedComments = existingPostData.post.comments.filter(comment => comment._id !== commentId);
           cache.writeQuery({
             query: GET_POST_BY_ID,
             variables: { id: postId },
             data: { post: { ...existingPostData.post, comments: updatedComments } }
           });
+
+          console.log("updatedComments", updatedComments);
         }
       });
     } catch (err) {

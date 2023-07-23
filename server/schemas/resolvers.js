@@ -64,10 +64,19 @@ const resolvers = {
         .populate('comments')
     },
     post: async (parent, { _id }) => {
-      return Post.findById(_id).populate('likes').populate({ path: 'likes.user' }).populate({ path: 'user' });
-
-
+      return Post.findById(_id)
+        .populate('likes')
+        .populate({ path: 'likes.user' })
+        .populate({ path: 'user' })
+        .populate({
+          path: 'comments',      
+          populate: {
+            path: 'user',       
+            model: 'User'        
+          }
+        });
     },
+  
     posts: async (parent, { username }) => {
       let query = {};
 
@@ -325,18 +334,18 @@ const resolvers = {
         throw new Error('Post not found');
       }
 
+      console.log("post:", post);
 
       // Convert context.user._id to a string
-      const currentUserId = context.user._id;
-      const postUserId = post.user;
-
-      console.log("currentUserId:", currentUserId);
-      console.log("postUserId:", postUserId);
+      const currentUserId = context.user._id.toString();
+      const postUserId = post.user.toString();
+      const commentUserId = comment.user.toString();
 
 
       if (commentUserId !== currentUserId && postUserId !== currentUserId) {
         throw new AuthenticationError('You can only delete comments that you posted or on your own posts.');
-      }
+    }
+    
 
 
       await Comment.findByIdAndDelete(commentId);
