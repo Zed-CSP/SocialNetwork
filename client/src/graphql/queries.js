@@ -35,6 +35,7 @@ export const GET_POSTS = gql`
   }
 `;
 
+
 export const GET_POST_BY_ID = gql`
   query GetPostById($id: ID!) {
     post(id: $id) {
@@ -50,7 +51,8 @@ export const GET_POST_BY_ID = gql`
   }
 `;
 
- 
+
+
 export const GET_ME = gql`
 query GetMe {
     me {
