@@ -32,10 +32,11 @@ const { gql } = require('apollo-server-express');
   type Comment {
     _id: ID!
     content: String!
+    post: Post
     user: User!
-    post: Post!
-    createdAt: String!
+    createdAt: String
   }
+  
 
   type Like {
     _id: ID!

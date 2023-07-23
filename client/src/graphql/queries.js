@@ -22,9 +22,34 @@ export const GET_POSTS = gql`
           _id
         }
       }
+      comments { 
+        _id
+        content
+        user {
+          _id
+          username
+        }
+        createdAt
+      }
     }
   }
 `;
+
+export const GET_POST_BY_ID = gql`
+  query GetPostById($id: ID!) {
+    post(id: $id) {
+      _id
+      content
+      
+      comments {
+        _id
+        content
+    
+      }
+    }
+  }
+`;
+
  
 export const GET_ME = gql`
 query GetMe {
