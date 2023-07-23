@@ -38,7 +38,8 @@ const resolvers = {
       if (!context.user) {
         throw new Error('Authentication required!');
       }
-      return await personalizedFeed(context.user._id);
+      return Post.find().populate('likes').populate({ path: 'likes.user' }).populate({ path: 'user' });
+
     },
     me: async (parent, args, context) => {
       if (context.user) {
@@ -63,13 +64,19 @@ const resolvers = {
         .populate('comments');
     },
     post: async (parent, { _id }) => {
-      return Post.findOne({ _id }).populate('likes').populate({ path: 'user' });
+      return Post.findById(_id).populate('likes').populate({ path: 'likes.user' }).populate({ path: 'user' });
+
 
     },
     posts: async (parent, { username }) => {
-      const params = username ? { username } : {};
-      return Post.find(params).sort({ createdAt: -1 }).populate('likes').populate({ path: 'user' });
+      if (username) {
+        const user = await User.findOne({ username });
+        if (!user) throw new Error('User not found!');
+        return Post.find({ user: user._id }).populate('likes').populate({ path: 'likes.user' }).populate({ path: 'user' });
+      }
+      return Post.find().populate('likes').populate({ path: 'likes.user' }).populate({ path: 'user' });
     },
+
   },
   Upload: GraphQLUpload,
   Mutation: {
@@ -163,31 +170,35 @@ const resolvers = {
         );
 
         return post;
-      },
-
+    },
     likePost: async (_, { postId }, context) => {
       if (!context.user) {
         throw new AuthenticationError('You need to be logged in to like a post');
       }
 
-      const alreadyLiked = await Like.findOne({ post: postId, userId: context.user._id });
+      const alreadyLiked = await Like.findOne({ post: postId, user: context.user._id });
+
       if (alreadyLiked) {
         throw new Error('You already liked this post');
       }
 
-      const newLike = new Like({ post: postId, userId: context.user._id });
+      const newLike = new Like({ post: postId, user: context.user._id });
+
       await newLike.save();
 
       const updatedPost = await Post.findByIdAndUpdate(
         postId,
         { $addToSet: { likes: newLike._id } },
         { new: true }
-    )
-    .populate('likes')
-    .populate({ path: 'user'});
+      )
+      .populate('likes')
+      .populate({ path: 'likes.user' })  // <-- this will populate the user for each like
+      .populate({ path: 'user' }); // this populates the user of the post itself
+      
 
       return updatedPost;
     },
+
 
 
     unlikePost: async (_, { postId }, context) => {
@@ -195,7 +206,7 @@ const resolvers = {
         throw new AuthenticationError('You need to be logged in to unlike a post');
       }
 
-      const like = await Like.findOneAndDelete({ post: postId, userId: context.user._id });
+      const like = await Like.findOneAndDelete({ post: postId, user: context.user._id });
       if (!like) {
         throw new Error('You haven\'t liked this post yet');
       }
@@ -204,11 +215,20 @@ const resolvers = {
         postId,
         { $pull: { likes: like._id } },
         { new: true }
-      ).populate('likes');
+      )
+      .populate('likes')
+      .populate({ path: 'likes.user' }); // <-- populate the user for each like
+      
+      
 
       return updatedPost;
     },
     
+
+
+
+
+
     deletePost: async (parent, { postId }, context) => {
       if (context.user) {
         const post = await Post.findByIdAndDelete({ _id: postId });

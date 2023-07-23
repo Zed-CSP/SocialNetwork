@@ -28,7 +28,13 @@ export default function PostCard({ post }) {
   const currentUser = data.me; 
 
   const likesArray = post.likes || [];
-  const isLikedByUser = likesArray.some(like => like.username === currentUser.username);
+
+  console.log("likesArray", likesArray);
+  
+  const isLikedByUser = likesArray.some(like => like.user && like.user.username === currentUser.username);
+
+
+  console.log("isLikedByUser", isLikedByUser);
 
   const handleLike = async (postId) => {
     try {

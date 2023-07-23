@@ -6,14 +6,16 @@ const { gql } = require('apollo-server-express');
 
   scalar Upload
 
-    type User {
+  type User {
     _id: ID!
-    username: String!
+    username: String
     email: String!
     date_of_birth: String!
     posts: [Post]
     comments: [Comment]
-  }
+    likes: [Like]
+}
+
 
   type Post {
     _id: ID!
