@@ -23,12 +23,12 @@ const getUserFromToken = async (token) => {
       token = token.slice(7, token.length).trimLeft();
     }
 
-    console.log("Decoding token:", token);
+   
     const { data } = jwt.verify(token, jwtSecret);
-    console.log("Token decoded. User ID:", data._id);
+  
 
     const user = await User.findById(data._id);
-    console.log("User fetched from database:", user);
+
 
     return user;
   } catch (err) {
@@ -52,9 +52,7 @@ const server = new ApolloServer({
   await server.start();
 
   app.use((req, res, next) => {
-    console.log('Request received:', req.method, req.path);
-    console.log('Body:', req.body);
-    console.log('Headers:', req.headers);
+    
     if (req.is('text/*')) {
       req.text().then(txt => {
         console.log('Request body:', txt);
@@ -94,3 +92,4 @@ app.use(graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }));
     console.log(`Use GraphQL at http://localhost:${PORT}${server.graphqlPath}`);
   });
 })();
+ 

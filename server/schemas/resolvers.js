@@ -143,23 +143,36 @@ const resolvers = {
     },
     addPost: async (_, { content, photo }, context) => {
       console.log("addPost resolver");
-      console.log("content:", content);
-      console.log("context:", context.user);
+      
 
+      let photoUrl;
       if (context.user) {
-
         console.log(content);
 
         const moderatedContent = await moderateText(content);
+        
+        if(moderatedContent === "0") {
+          throw new Error('Your post contains inappropriate content.');
+          return;
+        }
+
         console.log("Moderated content:", moderatedContent);
 
-        let photoUrl;
+
 
         // Handle the photo upload if it exists
         if (photo) {
-          const { createReadStream, filename } = await photo.file;
-          const fileStream = createReadStream();
-          const uniqueFilename = uuidv4() + "-" + filename;  // generate a unique name
+          const photoDetails = await photo;
+          console.log("photoDetails:", photoDetails);
+
+          // Check if createReadStream exists in photoDetails, and if it's a function
+          if (typeof photoDetails.createReadStream !== "function") {
+            console.error("createReadStream is not a function on photoDetails!");
+            throw new Error('createReadStream is not available on the photo object.');
+          }
+
+          const fileStream = photoDetails.createReadStream();
+          const uniqueFilename = uuidv4() + "-" + photoDetails.filename;
 
           try {
             photoUrl = await uploadToS3(fileStream, uniqueFilename);
@@ -180,6 +193,7 @@ const resolvers = {
 
       return post;
     },
+
     likePost: async (_, { postId }, context) => {
       if (!context.user) {
         throw new AuthenticationError('You need to be logged in to like a post');
@@ -268,24 +282,24 @@ const resolvers = {
           { $push: { comments: newComment._id } },
           { new: true }
         );
-        
+
         if (!updatedPost) {
           throw new Error('Post not found');
         }
-        
+
         const postWithComments = await Post.findById(postId)
-        .populate({
-          path: 'comments',
-          model: 'Comment',
-          populate: {
-            path: 'user',
-            model: 'User'
-          }
-        });
+          .populate({
+            path: 'comments',
+            model: 'Comment',
+            populate: {
+              path: 'user',
+              model: 'User'
+            }
+          });
 
         console.log("postWithComments:", JSON.stringify(postWithComments, null, 2));
 
-          
+
         return postWithComments;
 
       } catch (error) {

@@ -10,7 +10,6 @@
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "heroku-postbuild": "cd client && npm install && npm run build"
   },
-
   "keywords": [],
   "author": "",
   "license": "ISC",
