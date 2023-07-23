@@ -7,17 +7,20 @@ import CardMedia from '@mui/material/CardMedia';
 import CreateTwoToneIcon from '@mui/icons-material/CreateTwoTone';
 import FavoriteTwoToneIcon from '@mui/icons-material/FavoriteTwoTone';
 import ChatBubbleTwoToneIcon from '@mui/icons-material/ChatBubbleTwoTone';
-
+import PostCard from "./Card";
 import { useState, useRef } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
-import{UPLOAD_AVATAR, GET_USER} from "../graphql/queries";
 
+import{UPLOAD_AVATAR, GET_POSTS} from "../graphql/queries";
+
+import jwt_decode from "jwt-decode";
 
 
 const hi = '10';
 
 export function Profile() {
 
+  
 
   // load profile picture/avatar
   // const { loading, error, data } = useQuery(GET_ME);
@@ -60,13 +63,27 @@ const [avatarFile, setAvatarFile] = useState(null);
     }
   };
 
-  // const { loading, error, data } = useQuery(GET_USER);
-  // if (loading) return <p>Loading...</p>;
-  // if (error) return <p>Error: {error.message}</p>;
-  // const user = data.me;
-  // const hasProfilePicture = !!user.profile_picture;
   
+  const token = localStorage.getItem("id_token");
+  const decodedToken = jwt_decode(token);
+  const username = decodedToken.data.username;
+  const _id = decodedToken.data._id
+  console.log(username);
+  console.log(_id);
 
+  const { loading, error, data } = useQuery(GET_POSTS, {
+
+    variables: { _id }, // Pass the username variable here
+
+  });
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
+
+  const posts = data.posts;
+  // const posts = data.posts.filter(post => post.user._id === id);
+  console.log(posts);
+  
 
   return (
     <div className="Pro" style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center'  }}>
@@ -112,8 +129,18 @@ const [avatarFile, setAvatarFile] = useState(null);
           <div className="secondary" style={{display: 'flex', padding: '2%'}}>
 
           <Typography style={{marginTop: '1%', padding: '1%', backgroundColor: 'rgba(128, 128, 128, 0.6)', borderRadius: '15px',  margin: '3%'}} variant="h6" gutterBottom>
-              {hi}
+              {username}
           </Typography>
+
+
+          
+              
+          </div>
+          <div className="userPost">
+
+          {posts.map((post) => (
+            <PostCard key={post._id} post={post} likes={post.likes} />
+          ))}
 
           </div>
         </Paper>
