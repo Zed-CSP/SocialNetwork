@@ -59,23 +59,24 @@ export default function PostCard({ post }) {
 
   return (
     <div className='Car'>
-      <Card color='dark' style={{ position: 'relative', backgroundColor: 'rgba(128, 128, 128, 0.6)', borderRadius: '15px' }}>
+      <Card color='dark' style={{ position: 'relative', backgroundColor: 'rgba(128, 128, 128, 0.6)', borderRadius: '15px', height: post.photo ? '60vh' : '30vh', width: '30vw' }}>
+      {post.photo && (
         <CardMedia
-          sx={{ height: '20vh', width: '30vw' }}
+          sx={{ height: '30vh', width: '30vw' }}
           image={post.photo ? post.photo : placeholder}
         />
-
+        )}
         <a href='#' style={{ position: 'absolute', top: '2%', left: '2%', zIndex: 1 }}>
           <Avatar alt={post.username} />
         </a>
 
         <CardContent>
-          <div className='Tagz'>
-            {/* Here you might want to parse post tags in the future */}
+          {/* <div className='Tagz'>
+            
             <span style={{ cursor: 'pointer', color: 'white' }}>
               #tag1 #tag2 #tag3
             </span>
-          </div>
+          </div> */}
 
           <div className='Desc'>
             <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>

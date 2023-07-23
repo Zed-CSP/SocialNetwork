@@ -6,10 +6,9 @@ import AccountCircleTwoToneIcon from '@mui/icons-material/AccountCircleTwoTone';
 import LoginTwoToneIcon from '@mui/icons-material/LoginTwoTone';
 import HowToRegTwoToneIcon from '@mui/icons-material/HowToRegTwoTone';
 import LogoutIcon from '@mui/icons-material/Logout';
-import { Slide } from "@material-ui/core";
 import Tooltip from '@mui/material/Tooltip';
 import React, { useState } from 'react';
-import KeyboardArrowRightTwoToneIcon from '@mui/icons-material/KeyboardArrowRightTwoTone';
+
 
 
 
@@ -28,11 +27,11 @@ const Header = () => {
     setTransition(!transition);
   };
 
-
+  const isAuthenticated = localStorage.getItem('id_token');
 
   const location = useLocation();
 
-  const showLoginRegisterButtons = location.pathname === '/login' || location.pathname === '/register';
+  const showLoginRegisterButtons = !isAuthenticated && (location.pathname === '/login' || location.pathname === '/register');
 
 
   return (
@@ -41,7 +40,7 @@ const Header = () => {
 
       <div className='NavCont' style={{ backgroundColor: 'rgba(128, 128, 128, 0.8)', borderRadius: '15px' }}>
 
-        {showLoginRegisterButtons && (
+        {!isAuthenticated && (
           <>
             <Tooltip title='Login'>
               <IconButton color="inherit" component={Link} to="/login">
@@ -56,7 +55,7 @@ const Header = () => {
             </Tooltip>
           </>
         )}
-        {!showLoginRegisterButtons && (
+        {isAuthenticated && (
           <>
             <Tooltip title='Home'>
               <IconButton color="inherit" component={Link} to="/home">
@@ -68,10 +67,6 @@ const Header = () => {
                 <SettingsTwoToneIcon />
               </IconButton>
             </Tooltip>
-
-            {/* <IconButton color="inherit" onClick={handleClick}>
-          <KeyboardArrowRightTwoToneIcon/>
-        </IconButton> */}
 
 
             <Tooltip title='Profile'>
