@@ -14,6 +14,7 @@ import CardMedia from '@mui/material/CardMedia';
 import ShareTwoToneIcon from '@mui/icons-material/ShareTwoTone';
 import placeholder from './img/in_img.png';
 import ReadMoreTwoToneIcon from '@mui/icons-material/ReadMoreTwoTone';
+import ChatBubbleTwoToneIcon from '@mui/icons-material/ChatBubbleTwoTone';
 // import { formatDistanceToNow } from 'date-fns';
 import { useQuery, useMutation } from '@apollo/client';
 import { GET_ME } from '../graphql/queries';
@@ -200,9 +201,9 @@ export default function PostCard({ post }) {
               {post.content}
             </Typography>
 
-            <IconButton style={{ color: 'blue', borderRadius: '50%' }}>
+            {/* <IconButton style={{ color: 'blue', borderRadius: '50%' }}>
               <ReadMoreTwoToneIcon />
-            </IconButton>
+            </IconButton> */}
           </div>
         </CardContent>
 
@@ -225,7 +226,7 @@ export default function PostCard({ post }) {
               style={{ borderRadius: '50%', color: 'white' }}
               onClick={() => setShowComments(!showComments)} // Toggle the comment section
             >
-              <CreateIcon />
+              <ChatBubbleTwoToneIcon />
             </IconButton>
             <IconButton aria-label='share' size='small' style={{ borderRadius: '50%', color: 'white' }}>
               <ShareTwoToneIcon />
