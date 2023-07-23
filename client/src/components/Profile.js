@@ -10,7 +10,9 @@ import ChatBubbleTwoToneIcon from '@mui/icons-material/ChatBubbleTwoTone';
 import PostCard from "./Card";
 import { useState, useRef } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
+
 import{UPLOAD_AVATAR, GET_USER, GET_POSTS } from "../graphql/queries";
+
 import jwt_decode from "jwt-decode";
 
 
@@ -65,18 +67,25 @@ const [avatarFile, setAvatarFile] = useState(null);
   const token = localStorage.getItem("id_token");
   const decodedToken = jwt_decode(token);
   const username = decodedToken.data.username;
-
+  const _id = decodedToken.data._id
   console.log(username);
+  console.log(_id);
+
+  const { loading, error, data } = useQuery(GET_POSTS, {
+
+    variables: { _id }, // Pass the username variable here
+
 
   const { loading, error, data } = useQuery(GET_POSTS, {
     variables: { username }, // Pass the username variable here
+
   });
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
 
   const posts = data.posts;
-
+  // const posts = data.posts.filter(post => post.user._id === id);
   console.log(posts);
   
 
