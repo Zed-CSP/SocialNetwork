@@ -10,7 +10,9 @@ import ChatBubbleTwoToneIcon from '@mui/icons-material/ChatBubbleTwoTone';
 import PostCard from "./Card";
 import { useState, useRef } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
+
 import{UPLOAD_AVATAR, GET_POSTS} from "../graphql/queries";
+
 import jwt_decode from "jwt-decode";
 
 
@@ -70,7 +72,9 @@ const [avatarFile, setAvatarFile] = useState(null);
   console.log(_id);
 
   const { loading, error, data } = useQuery(GET_POSTS, {
+
     variables: { _id }, // Pass the username variable here
+
   });
 
   if (loading) return <p>Loading...</p>;
