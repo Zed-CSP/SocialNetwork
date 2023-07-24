@@ -1,0 +1,14 @@
+@keyframes spinAndMove {
+    0%, 100% { 
+        transform: translateX(0) rotate(0deg); 
+    }
+    50% { 
+        transform: translateX(50%) rotate(180deg);
+    }
+}
+
+
+
+.spinAndMove {
+    animation: spinAndMove 2s linear infinite;
+}
