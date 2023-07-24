@@ -124,3 +124,11 @@ const CHECK_IMAGE = gql`
     checkImage(file: $file)
   }
 `;
+
+
+export const UPLOAD_AVATAR = gql`
+  mutation uploadAvatar($avatar: Upload!) {
+    uploadAvatar(avatar: $avatar)
+  }
+`;
+

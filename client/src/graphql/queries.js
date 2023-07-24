@@ -118,19 +118,9 @@ export const GET_PERSONALIZED_POSTS = gql`
 `;
 
 
-
-// move this later to mutations.js
-export const UPLOAD_AVATAR = gql`
-  mutation uploadAvatar($avatar: Upload!) {
-    uploadAvatar(avatar: $avatar)
-  }
-`;
-
-
 export const GET_USER_PIC = gql`
-query GetUser($id: ID!) {
-  user(id: $id) {
-    _id
+query GetUserPic($username: String!) {
+  user(username: $username) {
     username
     profile_picture
   }
