@@ -40,7 +40,6 @@ export function Profile() {
     try {
       if (avatarFile) {
         await uploadAvatar({ variables: { avatar: avatarFile } });
-        console.log(avatarFile);
         alert('Avatar uploaded successfully!');
       }
     } catch (error) {
@@ -54,9 +53,6 @@ export function Profile() {
   const decodedToken = jwt_decode(token);
   const username = decodedToken.data.username;
   const _id = decodedToken.data._id;
-
-  console.log(username);
-  console.log(_id);
 
   const { loading, error, data } = useQuery(GET_POSTS, {
     variables: { _id }, // Pass the id variable here
@@ -73,13 +69,13 @@ export function Profile() {
 
   const posts = data.posts;
   // const posts = data.posts.filter(post => post.user._id === id);
-  console.log(posts);
+ 
   
 
   if (userLoading) return <p>Loading...</p>;
   if (userError) return <p>Error: {userError.message}</p>;
   const user = userData.user;
-  console.log(user);
+  
 
   return (
     <div className="Pro" style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center'  }}>
