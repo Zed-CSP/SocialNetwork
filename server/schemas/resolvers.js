@@ -8,8 +8,8 @@ const { v4: uuidv4 } = require('uuid');  // for generating unique filenames
 const { GraphQLUpload } = require('graphql-upload');
 const moderateText = require('../utils/ai/moderateText');
 const lookForJackieChan = require('../utils/ai/moderateImage');
-const isItJackieChan = require('../utils/ai/isItJackieChan');
-const jackieChanMessage = require('../utils/ai/isItJackieChan');
+const isItJackieChan = require('../utils/ai/isItAboutJackieChan');
+const jackieChanMessage = require('../utils/ai/isItAboutJackieChan');
 
 
 
