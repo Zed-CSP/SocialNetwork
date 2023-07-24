@@ -8,8 +8,6 @@ export function Tos({ open, onAccept, onClose }) {
     const [agreeSize, setAgreeSize] = useState('14px');
     const [agreeMoving, setAgreeMoving] = useState(false);
     const [agreeScale, setAgreeScale] = useState(1);
-    const [bounceCount, setBounceCount] = useState(0);
-    const [spin, setSpin] = useState(false);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -31,29 +29,22 @@ export function Tos({ open, onAccept, onClose }) {
 
     const agreeSizeUp = () => {
         let agreeSizer = parseInt(agreeSize.slice(0, -2));
-        if (agreeSizer < 80) {
+        if (agreeSizer < 90) {
             agreeSizer += 6;
             setAgreeSize(`${agreeSizer}px`);
-            setAgreeScale(agreeSizer / 12);
-            if (agreeSizer > 80) {
-                setAgreeMoving(true);
-            }
+            setAgreeScale(agreeSizer / 14);
         }
     };
     
     useEffect(() => {
-        if (agreeMoving && bounceCount < 5) {
-            const interval = setInterval(() => {
-                setBounceCount(bounceCount + 1);
-            }, 2000);
-
-            return () => clearInterval(interval);
-        } else if (bounceCount === 5) {
-            setSpin(true);
+        const agreeSizer = parseInt(agreeSize.slice(0, -2));
+        if (agreeSizer >= 80) {
+            setAgreeMoving(true);
+        } else {
+            setAgreeMoving(false);
         }
-    }, [agreeMoving, bounceCount]);
+    }, [agreeSize]);
 
-    
     return (
         <Modal
             open={open}
@@ -73,23 +64,47 @@ export function Tos({ open, onAccept, onClose }) {
                 overflowY: 'auto',
             }}>
                 {TosWeight()}
-                <form onSubmit={handleSubmit} style={{display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%'}}>
-                    <div style={{position: 'relative', width: '100%', height: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-                        <p className={spin ? 'spin' : agreeMoving ? 'move' : ''} style={{fontSize: agreeSize, position: 'absolute'}}>
+                <form onSubmit={handleSubmit} style={{display: 'flex', flexDirection: 'column', alignItems: 'center', width: '75vw'}}>
+                    <div style={{position: 'relative', width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                        <p className={agreeMoving ? 'spinAndMove' : ''} style={{fontSize: agreeSize, position: 'absolute'}}>
                             I agree,
                         </p>
                     </div>
                     <div style={{alignSelf: 'flex-end', marginTop: '20px'}}>
                         <input type="checkbox" id="agree" name="agree" checked={isAgreed} onChange={handleAgreeChange} style={{transform: `scale(${agreeScale})`}} /> 
                         <br/><br/>
-                        <button type="submit" style={{marginTop: '10px'}}>Submit</button>
+                        <button 
+                            type="submit" 
+                            style={{
+                                marginTop: '10px', 
+                                border: 'none', 
+                                borderRadius: '5px',
+                                padding: '10px 20px',
+                                color: '#fff', 
+                                fontSize: '16px',
+                                background: 'linear-gradient(45deg, #4b6cb7 0%, #182848 100%)', 
+                                boxShadow: '0 3px 5px 2px rgba(0, 0, 0, .3)', 
+                                textTransform: 'uppercase', 
+                                cursor: 'pointer', 
+                                outline: 'none'
+                            }}
+                            onMouseDown={(e) => {
+                                e.target.style.transform = 'scale(0.95)';
+                                e.target.style.boxShadow = '0 2px 3px 1px rgba(0, 0, 0, .3)';
+                            }}
+                            onMouseUp={(e) => {
+                                e.target.style.transform = 'scale(1)';
+                                e.target.style.boxShadow = '0 3px 5px 2px rgba(0, 0, 0, .3)';
+                            }}
+                        >
+                            Submit
+                        </button>
+
                     </div>
                 </form>
             </div>
         </Modal>
     );
-
 }
 
 export default Tos;
-
