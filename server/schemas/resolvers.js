@@ -152,8 +152,16 @@ const resolvers = {
       } catch (error) {
         throw new Error(`Failed to fetch comments for username: ${username}. Error: ${error.message}`);
       }
+
+
+      const { createReadStream, filename } = await avatar;
+      const fileStream = createReadStream();
+      const uniqueFilename = uuidv4() + '-' + filename; // Generate a unique name
+
+
     },
     likes: async (parent, { username }) => {
+
       try {
         // Find likes by the given username
         const userLikes = await Like.find({ username: username });

@@ -11,6 +11,7 @@ const typeDefs = gql`
     username: String
     email: String!
     date_of_birth: String!
+    profile_picture: String
     interests: [String]
     posts: [Post]
     comments: [Comment]

@@ -62,11 +62,11 @@ const Header = () => {
                 <HomeTwoToneIcon />
               </IconButton>
             </Tooltip>
-            <Tooltip title='Setting'>
+            {/* <Tooltip title='Setting'>
               <IconButton color="inherit" component={Link} to="/settings">
                 <SettingsTwoToneIcon />
               </IconButton>
-            </Tooltip>
+            </Tooltip> */}
 
 
             <Tooltip title='Profile'>
