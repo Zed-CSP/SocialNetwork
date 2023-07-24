@@ -48,7 +48,7 @@ const resolvers = {
 
 
 
-
+    // WORKS FOR NOW ISH
     userFeed: async (_, { userId }, context) => {
       if (!context.user) {
           throw new Error('Authentication required!');
