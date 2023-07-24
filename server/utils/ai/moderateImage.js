@@ -1,45 +1,36 @@
-// Import the AWS SDK
-const AWS = require("aws-sdk");
+const { rekognition } = require('../../config/s3');
 
-// Configure the AWS SDK with your region
-AWS.config.update({ region: "us-east-1" }); // Replace with your region
+const moderateImage = async (s3Url) => {
+    try {
+      const urlParts = s3Url.split('/');
+      const bucket = urlParts[2].split('.')[0];
+      const key = urlParts.slice(3).join('/');
+      
 
-// Create a new instance of the Rekognition service
-const rekognition = new AWS.Rekognition();
+        const params = {
+            Image: {
+                S3Object: {
+                    Bucket: bucket,
+                    Name: key
+                }
+            }
+        };
 
-/**
- * Check if Jackie Chan is in an image using Amazon Rekognition.
- * 
- * @param {Buffer} imageBytes - A buffer containing the image bytes.
- * @returns {Promise<boolean>} - A promise that resolves to true if Jackie Chan is detected in the image, or false if not.
- */
+        const response = await rekognition.detectModerationLabels(params).promise();
 
+        const unsafeContents = response.ModerationLabels.filter(label => label.Confidence > 90);  // Adjust the confidence level as needed
 
-const checkForJackieChan = async (imageBytes) => {
-  const params = {
-    Image: {
-      Bytes: imageBytes,
-    },
-  };
-
-  try {
-    const response = await rekognition.recognizeCelebrities(params).promise();
-
-    // Check if Jackie Chan is in the returned celebrities
-    const jackieChan = response.CelebrityFaces.find(face => face.Name === "Jackie Chan");
-
-    if (jackieChan) {
-      // If Jackie Chan was returned, he was detected in the image.
-      console.log(`Jackie Chan detected in image with confidence ${jackieChan.Face.Confidence}`);
-      return true;
-    } else {
-      // If Jackie Chan was not returned, he was not detected in the image.
-      return false;
+        if (unsafeContents.length > 0) {
+            console.log('Unsafe content detected:', unsafeContents);
+            return false; // Image contains unsafe content
+        } else {
+            console.log('Image is safe.');
+            return true; // Image is safe
+        }
+    } catch (error) {
+        console.error(`Error moderating image: ${error}`);
+        throw error;
     }
-  } catch (error) {
-    console.error(`An error occurred while checking image for Jackie Chan:`, error);
-    throw error;
-  }
 };
 
-module.exports = checkForJackieChan;
+module.exports = moderateImage;
