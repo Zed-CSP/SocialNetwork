@@ -40,7 +40,7 @@ export function Home() {
                     },
                 }}
             >
-                 <div className='innerFeed' style={{ position: 'absolute', height: '70%', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', overflow: 'auto' }}>
+                 <div className='innerFeed' style={{ position: 'absolute', height: '80%', top: '55%', left: '50%', transform: 'translate(-50%, -50%)', overflow: 'auto' }}>
                 {posts.map(post => (
                     <PostCard key={post._id} post={post} likes={post.likes} />
                 ))}
