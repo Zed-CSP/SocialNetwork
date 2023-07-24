@@ -6,8 +6,11 @@ const openaiApiKey = process.env.OPENAI_API_KEY;
 const moderateText = async (content) => {
     console.log('Checking content moderation...');
     console.log('Content to be moderated:', content);
-
+    
     try {
+        //##################################################
+        //#### Make Moderation request to the OpenAI API ##
+        //################################################
         const response = await axios.post(
             'https://api.openai.com/v1/moderations', // Update this to the correct moderation endpoint
             { input: content },

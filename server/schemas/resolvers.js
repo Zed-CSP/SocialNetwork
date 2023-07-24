@@ -6,7 +6,10 @@ const { v4: uuidv4 } = require('uuid');  // for generating unique filenames
 // Use the already set-up s3 instance from your s3.js file
 const { GraphQLUpload } = require('graphql-upload');
 const moderateText = require('../utils/ai/moderateText');
+const checkForJackieChan = require('../utils/ai/moderateImage');
+const isItJackieChan = require('../utils/ai/isItJackieChan');
 const generateFeed = require('../algorithms/feed_generator');
+
 
 
 const s3 = new AWS.S3({
@@ -195,38 +198,44 @@ const resolvers = {
     },
     addPost: async (_, { content, photo }, context) => {
       console.log("addPost resolver");
-
-
+      
       let photoUrl;
       if (context.user) {
-
         const hashtags = extractHashtags(content);
         console.log("hashtags:", hashtags);
+        const aboutJackieChan = await isItJackieChan(content);
+          if (aboutJackieChan) {
+            throw new Error('Jackie Chan is not allowed in posts.');
+            return itIsJackieChan;
+          }
+        
+        const isJackieChan = await checkForJackieChan(photo);
+          if (isJackieChan) {
+            throw new Error('Jackie Chan is not allowed in photos.');
+            return;
+          }
         const moderatedContent = await moderateText(content);
-
-        if (moderatedContent === "0") {
-          throw new Error('Your post contains inappropriate content.');
-          return;
-        }
-
+        
+          if (moderatedContent === "0") {
+            throw new Error('Your post contains inappropriate content.');
+            return;
+          }
         console.log("Moderated content:", moderatedContent);
-
-
-
+        
         // Handle the photo upload if it exists
         if (photo) {
           const photoDetails = await photo;
           console.log("photoDetails:", photoDetails);
-
+          
           // Check if createReadStream exists in photoDetails, and if it's a function
           if (typeof photoDetails.createReadStream !== "function") {
             console.error("createReadStream is not a function on photoDetails!");
             throw new Error('createReadStream is not available on the photo object.');
           }
-
+          
           const fileStream = photoDetails.createReadStream();
           const uniqueFilename = uuidv4() + "-" + photoDetails.filename;
-
+          
           try {
             photoUrl = await uploadToS3(fileStream, uniqueFilename);
           } catch (error) {
@@ -234,9 +243,9 @@ const resolvers = {
             throw new Error('Error uploading image to S3.');
           }
         }
-
+        
         console.log("context.user:", context.user._id);
-
+        
         const post = await Post.create({
           content,
           photo: photoUrl,
@@ -245,7 +254,7 @@ const resolvers = {
         });
 
         console.log("Post created:", post);
-
+        
         await User.findByIdAndUpdate(
           { _id: context.user._id },
           { $push: { posts: post._id } },
@@ -254,6 +263,17 @@ const resolvers = {
         console.log("User updated");
         return post;
       }
+
+    },
+    checkImage: async (_, { file }) => {
+      const { createReadStream } = await file;
+      const chunks = [];
+      for await (let chunk of createReadStream()) {
+        chunks.push(chunk);
+      }
+      const buffer = Buffer.concat(chunks);
+      return await checkForJackieChan(buffer);
+
     },
     likePost: async (_, { postId }, context) => {
       if (!context.user) {
@@ -384,7 +404,7 @@ const resolvers = {
         console.error('Error saving the comment:', error);
         throw new Error('There was an issue adding the comment. Please try again later.');
       }
-    },
+
     deleteComment: async (_, { postId, commentId }, context) => {
       console.log("postId:", postId);
       console.log("commentId:", commentId);
@@ -429,11 +449,6 @@ const resolvers = {
       return updatedPost;
     },
 
-
-
-
-
-
     uploadAvatar: async (_, { avatar }, user) => {
       // Check if the user is authenticated
       if (!user) {
@@ -457,8 +472,6 @@ const resolvers = {
         console.error('Error uploading avatar:', error);
         throw new Error('Error uploading avatar.');
       }
-
-
     },
     deletePost: async (parent, { postId }, context) => {
       if (context.user) {
@@ -472,11 +485,11 @@ const resolvers = {
 
         return post;
       }
-
       throw new AuthenticationError('You need to be logged in!');
     },
 
   },
 };
+
 
 module.exports = resolvers;
