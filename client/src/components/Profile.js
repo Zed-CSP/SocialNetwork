@@ -11,7 +11,7 @@ import PostCard from "./Card";
 import { useState, useRef } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
 
-import{UPLOAD_AVATAR, GET_POSTS} from "../graphql/queries";
+import{UPLOAD_AVATAR, GET_USER, GET_POSTS } from "../graphql/queries";
 
 import jwt_decode from "jwt-decode";
 
@@ -74,6 +74,10 @@ const [avatarFile, setAvatarFile] = useState(null);
   const { loading, error, data } = useQuery(GET_POSTS, {
 
     variables: { _id }, // Pass the username variable here
+
+
+  const { loading, error, data } = useQuery(GET_POSTS, {
+    variables: { username }, // Pass the username variable here
 
   });
 
