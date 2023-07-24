@@ -2,6 +2,7 @@ require('dotenv').config();
 const axios = require('axios');
 
 const openaiApiKey = process.env.OPENAI_API_KEY;
+let jackieChanMessage = '';
 
 const isItJackieChan = async (content) => {
     console.log('Checking for Jackie Chan...');
@@ -32,7 +33,10 @@ const isItJackieChan = async (content) => {
             },
             { headers: { 'Authorization': `Bearer ${openaiApiKey}` } }
         );
-        // console.log('API Response:', JSON.stringify(gptResponse.data));
+        console.log(' ');
+        console.log('API Response:', gptResponse.data);
+        // console log blank line
+        console.log(' ');
 
         const content = gptResponse.data.choices[0].message.content;
         const isItJackieChan = content.startsWith("1");
@@ -40,10 +44,10 @@ const isItJackieChan = async (content) => {
         if (isItJackieChan) {
             const jackieChanMessage = content.slice(2);
             console.log('Content is about Jackie Chan: ', jackieChanMessage);
-            return '1', itIsJackieChan; // Shouldn't be posted
+            return { containsJackieChan: true, jackieChanMessage }; // Should not be posted
         } else {
             console.log('Content is not about Jackie Chan');
-            return '0'; // Should be posted
+            return false; // Should be posted
         }
 
     } catch (error) {
@@ -52,4 +56,4 @@ const isItJackieChan = async (content) => {
     }
 };
 
-module.exports = isItJackieChan;
+module.exports = isItJackieChan, jackieChanMessage;

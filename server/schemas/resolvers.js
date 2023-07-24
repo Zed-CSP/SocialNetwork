@@ -7,8 +7,10 @@ const { v4: uuidv4 } = require('uuid');  // for generating unique filenames
 // Use the already set-up s3 instance from your s3.js file
 const { GraphQLUpload } = require('graphql-upload');
 const moderateText = require('../utils/ai/moderateText');
-const checkForJackieChan = require('../utils/ai/moderateImage');
+const lookForJackieChan = require('../utils/ai/moderateImage');
 const isItJackieChan = require('../utils/ai/isItJackieChan');
+const jackieChanMessage = require('../utils/ai/isItJackieChan');
+
 
 
 const s3 = new AWS.S3({
@@ -43,7 +45,6 @@ const extractHashtags = (text) => {
   }
   return result;
 };
-
 
 const resolvers = {
   Query: {
@@ -166,29 +167,31 @@ const resolvers = {
     },
     addPost: async (_, { content, photo }, context) => {
       console.log("addPost resolver");
-      
       let photoUrl;
+      
       if (context.user) {
         const hashtags = extractHashtags(content);
         console.log("hashtags:", hashtags);
-        const aboutJackieChan = await isItJackieChan(content);
-          if (aboutJackieChan) {
-            throw new Error('Jackie Chan is not allowed in posts.');
-            return itIsJackieChan;
-          }
-        
-        const isJackieChan = await checkForJackieChan(photo);
-          if (isJackieChan) {
-            throw new Error('Jackie Chan is not allowed in photos.');
+        const checkResult = await isItJackieChan(content);
+        console.log("checkResult:", checkResult);
+    
+        if (checkResult.containsJackieChan) {
+            throw new Error(checkResult.jackieChanMessage);
             return;
-          }
+        }
+        
+        // const isJackieChan = await lookForJackieChan(photo);
+        //   if (isJackieChan) {
+        //     throw new Error('Jackie Chan is not allowed in photos.');
+        //     return;
+        //   }
         const moderatedContent = await moderateText(content);
+        console.log("Moderated content:", moderatedContent);
         
           if (moderatedContent === "0") {
             throw new Error('Your post contains inappropriate content.');
             return;
           }
-        console.log("Moderated content:", moderatedContent);
         
         // Handle the photo upload if it exists
         if (photo) {
@@ -239,7 +242,7 @@ const resolvers = {
         chunks.push(chunk);
       }
       const buffer = Buffer.concat(chunks);
-      return await checkForJackieChan(buffer);
+      return await lookForJackieChan(buffer);
     },
     likePost: async (_, { postId }, context) => {
       if (!context.user) {

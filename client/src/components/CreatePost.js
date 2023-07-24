@@ -125,7 +125,7 @@ function CreatePost() {
         <Button type="submit" variant="contained" style={{ marginTop: '1rem', backgroundColor: 'grey' }}>
           Create Post
         </Button>
-        {error && <p>Error creating post: {error.message}</p>}
+        {error && <p>Cannot create post!: {error.message}</p>}
       </form>
     </Box>
     </div>
