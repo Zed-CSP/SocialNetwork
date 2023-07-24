@@ -71,7 +71,11 @@ type Mutation {
   deletePost(postId: ID!): User
   uploadAvatar(avatar: Upload!): Boolean
   uploadCardMedia(cardmedia: Upload!): Boolean
+  checkImage(file: Upload!): Boolean
 }
+
+
+
 
 `;
 

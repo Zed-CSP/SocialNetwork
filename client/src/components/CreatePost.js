@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useMutation } from '@apollo/client';
+import { useMutation, gql } from '@apollo/client';
 import { TextField, Button, Box, Card, CardMedia } from '@mui/material';
 import { ADD_POST } from '../graphql/mutations';
 
@@ -35,25 +35,35 @@ function CreatePost() {
   };
 
   const handlePhotoChange = (event) => {
-
     const file = event.target.files[0];
     if (!file) return;
-    
+  
     setPhoto(file);
-
-
-
-    // Create a new FileReader object
+  
     let reader = new FileReader();
-
-    // Read the contents of the file
     reader.readAsDataURL(file);
-
-    // Set the preview state to the result once reading is finished
     reader.onloadend = () => {
       setPreview(reader.result);
-      };
+  
+      // Send the file to the server for analysis
+      let formData = new FormData();
+      formData.append('image', file);
+  
+      fetch('http://localhost:3001/check-image', {
+        method: 'POST',
+        body: formData,
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.containsJackieChan) {
+          alert("Jackie Chan detected in image!");
+        } else {
+          alert("No Jackie Chan detected in image.");
+        }
+      })
+      .catch(error => console.error('Error checking image:', error));
     };
+  };
 
   return (
     <div className='Cre'>
