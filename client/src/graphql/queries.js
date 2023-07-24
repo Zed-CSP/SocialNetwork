@@ -86,3 +86,13 @@ export const UPLOAD_AVATAR = gql`
     uploadAvatar(avatar: $avatar)
   }
 `;
+
+export const GET_USER_PIC = gql`
+query GetUser($id: ID!) {
+  user(id: $id) {
+    _id
+    username
+    profile_picture
+  }
+}
+`;

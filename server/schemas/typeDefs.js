@@ -11,6 +11,7 @@ const { gql } = require('apollo-server-express');
     username: String
     email: String!
     date_of_birth: String!
+    profile_picture: String
     posts: [Post]
     comments: [Comment]
     likes: [Like]

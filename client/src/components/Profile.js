@@ -4,19 +4,15 @@ import { Paper, Box, Typography, Avatar, Chip, Stack, Badge, Button} from "@mui/
 import './css/HC.css'
 import pro_img from './img/stock_earth.webp';
 import CardMedia from '@mui/material/CardMedia';
-import CreateTwoToneIcon from '@mui/icons-material/CreateTwoTone';
-import FavoriteTwoToneIcon from '@mui/icons-material/FavoriteTwoTone';
-import ChatBubbleTwoToneIcon from '@mui/icons-material/ChatBubbleTwoTone';
+// import CreateTwoToneIcon from '@mui/icons-material/CreateTwoTone';
+// import FavoriteTwoToneIcon from '@mui/icons-material/FavoriteTwoTone';
+// import ChatBubbleTwoToneIcon from '@mui/icons-material/ChatBubbleTwoTone';
 import PostCard from "./Card";
 import { useState, useRef } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
-
-import{UPLOAD_AVATAR, GET_USER, GET_POSTS } from "../graphql/queries";
-
+import{UPLOAD_AVATAR, GET_USER_PIC, GET_POSTS } from "../graphql/queries";
 import jwt_decode from "jwt-decode";
 
-
-const hi = '10';
 
 export function Profile() {
 
@@ -73,10 +69,14 @@ const [avatarFile, setAvatarFile] = useState(null);
 
   const { loading, error, data } = useQuery(GET_POSTS, {
 
-    variables: { _id }, // Pass the username variable here
+    variables: { _id }, // Pass the id variable here
 
   });
-
+  //====
+  const { loading: userLoading, error: userError, data: userData } = useQuery(GET_USER_PIC, {
+    variables: { id: _id }, // Pass the user's ID as a variable to the query
+  });
+  //====
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
 
@@ -84,6 +84,14 @@ const [avatarFile, setAvatarFile] = useState(null);
   // const posts = data.posts.filter(post => post.user._id === id);
   console.log(posts);
   
+
+  // const { loading: userLoading, error: userError, data: userData } = useQuery(GET_USER_PIC, {
+  //   variables: { id: _id }, // Pass the user's ID as a variable to the query
+  // });
+
+  if (userLoading) return <p>Loading...</p>;
+  if (userError) return <p>Error: {userError.message}</p>;
+  const user = userData.user;
 
   return (
     <div className="Pro" style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center'  }}>
@@ -113,16 +121,16 @@ const [avatarFile, setAvatarFile] = useState(null);
               onClick={() => cardMediaFileInputRef.current.click()} />
             
             
-            <Avatar sx={{ width: 60, height: 60, position:'absolute', bottom: '30vh', border: '2px solid white', cursor: 'pointer' }} onClick={() => avatarFileInputRef.current.click()}>  {/*() => avatarFileInputRef.current.click()*/}
+            <Avatar sx={{ width: 60, height: 60, position:'absolute', top: '28vh', border: '2px solid white', cursor: 'pointer' }} onClick={() => avatarFileInputRef.current.click()}>  {/*() => avatarFileInputRef.current.click()*/}
             
             <input type="file" accept="image/*" onChange={handleAvatarFileChange} style={{ display: 'none' }} ref={avatarFileInputRef} />
-            {/* {hasProfilePicture && <img src={user.profile_picture} alt="Profile Avatar" />} */}
+            {user.profile_picture && <img src={user.profile_picture} alt="Profile Avatar" />}
             {avatarFile && ( 
                 <img src={URL.createObjectURL(avatarFile)} alt="Uploaded Avatar" style={{ width: '100%', height: '100%', borderRadius: '50%' }} />
               )}
             </Avatar>
             {avatarFile && (
-              <Button onClick={handleUploadAvatar} style={{}}>Upload Avatar</Button>
+              <Button variant={'contained'} onClick={handleUploadAvatar} style={{backgroundColor: "grey", position: 'absolute', top: '40vh'}}>Upload Avatar</Button>
             )}
 
           </div>
@@ -158,7 +166,3 @@ const [avatarFile, setAvatarFile] = useState(null);
 
 export default Profile;
 
-
-{/* {posts.map(post => (
-                    <PostCard key={post._id} post={post} likes={post.likes} />
-                ))} */}

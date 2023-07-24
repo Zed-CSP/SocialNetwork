@@ -120,7 +120,7 @@ const resolvers = {
         throw new Error('Please provide an image file.');
       }
 
-      const { createReadStream, filename } = await avatar.file;
+      const { createReadStream, filename } = await avatar;
       const fileStream = createReadStream();
       const uniqueFilename = uuidv4() + '-' + filename; // Generate a unique name
 

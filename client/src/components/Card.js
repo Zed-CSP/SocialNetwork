@@ -201,11 +201,11 @@ export default function PostCard({ post }) {
 
   const dynamicHeight = showComments
     ? post.photo
-      ? '95vh' // comments and a photo
+      ? '93vh' // comments and a photo
       : '66vh' // comments but no photo
     : post.photo
-    ? '55vh' // no comments but there is a photo
-    : '25vh'; // no comments and no photo
+    ? '53vh' // no comments but there is a photo
+    : '23vh'; // no comments and no photo
 
 
   return (
@@ -272,7 +272,7 @@ export default function PostCard({ post }) {
           </div>
           {showComments && (
             <div style={{ width: '100%', height: '50%'}} ref={commentsTopRef}>
-              <div style={{ maxHeight: '180px', maxWidth: '328px', overflowY: 'scroll', borderBottom: '1px solid white' }}>
+              <div style={{ maxHeight: '180px', maxWidth: '100vw', overflowY: 'scroll', borderBottom: '1px solid white' }}>
                 {/* Dynamically render each comment from the post object in reverse order */}
                 {[...post.comments].reverse().map((comment, idx, arr) => (
                   <div
@@ -291,7 +291,7 @@ export default function PostCard({ post }) {
                       )}
                     </div>
 
-                    <Typography variant="caption" color="text.secondary" display="block" style={{ marginTop: '5px' }}>
+                    <Typography variant="caption" color="text.secondary" display="block" style={{ marginTop: '5px', width: '100vw' }}>
                       {/* Uncomment the following line when you've resolved the date format issue */}
                       {/* {formatDistanceToNow(new Date(comment.createdAt))} ago */}
                     </Typography>
