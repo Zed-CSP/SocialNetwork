@@ -76,9 +76,6 @@ const [avatarFile, setAvatarFile] = useState(null);
     variables: { _id }, // Pass the username variable here
 
 
-  const { loading, error, data } = useQuery(GET_POSTS, {
-    variables: { username }, // Pass the username variable here
-
   });
 
   if (loading) return <p>Loading...</p>;
