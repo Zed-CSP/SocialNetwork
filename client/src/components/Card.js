@@ -181,11 +181,18 @@ export default function PostCard({ post }) {
     }
   };
 
+  const dynamicHeight = showComments
+    ? post.photo
+      ? '95vh' // comments and a photo
+      : '66vh' // comments but no photo
+    : post.photo
+    ? '55vh' // no comments but there is a photo
+    : '25vh'; // no comments and no photo
 
 
   return (
     <div className='Car'>
-      <Card color='dark' style={{ position: 'relative', backgroundColor: 'rgba(128, 128, 128, 0.6)', borderRadius: '15px', height: post.photo ? '60vh' : '30vh', width: '30vw' }}>
+      <Card color='dark' style={{ position: 'relative', backgroundColor: 'rgba(128, 128, 128, 0.6)', borderRadius: '15px', height: dynamicHeight, width: '30vw' }}>
         {post.photo && (
           <CardMedia
             sx={{ height: '30vh', width: '30vw' }}
@@ -245,7 +252,7 @@ export default function PostCard({ post }) {
             </IconButton>
           </div>
           {showComments && (
-            <div style={{ width: '100%' }} ref={commentsTopRef}>
+            <div style={{ width: '100%', height: '50%'}} ref={commentsTopRef}>
               <div style={{ maxHeight: '180px', maxWidth: '328px', overflowY: 'scroll', borderBottom: '1px solid white' }}>
                 {/* Dynamically render each comment from the post object in reverse order */}
                 {[...post.comments].reverse().map((comment, idx, arr) => (
