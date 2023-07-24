@@ -1,50 +1,49 @@
-const Post = require('../models/Post'); // Assuming you have a Post model
+const Post = require('../models/Post');
 const User = require('../models/User');
 
-const personalizedFeed = async (userId) => {
-    let feed = [];
-
-    // Layer 1: User Interactions
-    const userInteractions = await Post.find({ likedBy: userId }) // Assuming you have a 'likedBy' array in Post schema
-    .limit(10); // Fetching last 10 liked posts
-    feed = feed.concat(userInteractions);
-
-    // Layer 2: Hashtags & Interests
+async function generateFeed(userId) {
     const user = await User.findById(userId);
+    let posts = [];
+
     if (user && user.interests.length > 0) {
-        const hashtagPosts = await Post.find({ hashtags: { $in: user.interests } }) // Assuming posts have a 'hashtags' array and users have an 'interests' array
-        .limit(10);
-        feed = feed.concat(hashtagPosts);
+        posts = await Post.find({
+            hashtags: { $in: user.interests }
+        })
+        .sort({ createdAt: -1 })
+        .limit(20)
+        .populate('likes')
+        .populate({ path: 'likes.user' })
+        .populate({ path: 'user' })
+        .populate({
+            path: 'comments',
+            populate: {
+              path: 'user',
+              model: 'User'
+            }
+        })
+        .exec();
     }
 
-    // Layer 3: Network
-    // Assuming you have a 'friends' array in User schema
-    // const friendsPosts = await Post.find({ createdBy: { $in: user.friends } })
-    // .sort({ createdAt: -1 }) // Sort by most recent
-    // .limit(10); 
-    // feed = feed.concat(friendsPosts);
-
-    // Layer 4: General Popularity
-    // Here, you might need to decide what "popularity" means. For simplicity, let's say posts with most likes:
-    const trendingPosts = await Post.find()
-    .sort({ likedBy: -1 }) // Sort by number of likes
-    .limit(10);
-    feed = feed.concat(trendingPosts);
-
-    // Combine & shuffle (if needed)
-    // You can shuffle the feed to mix posts from different layers, but that's optional.
-
-    return feed;
+    if (posts.length < 10) {
+        const randomPosts = await Post.aggregate([{ $sample: { size: 10 - posts.length } }]);
+        const randomPostIds = randomPosts.map(post => post._id);
+        const populatedRandomPosts = await Post.find({_id: {$in: randomPostIds}})
+            .populate('likes')
+            .populate({ path: 'likes.user' })
+            .populate({ path: 'user' })
+            .populate({
+                path: 'comments',
+                populate: {
+                  path: 'user',
+                  model: 'User'
+                }
+            })
+            .exec();
+    
+        posts = [...posts, ...populatedRandomPosts];
+    }
+    
+    return posts;
 }
 
-const getRandomFeed = async (limit = 5) => {
-    // Fetch posts from the database
-    const posts = await Post.find({}).limit(limit).exec();
-
-    // Shuffle the posts
-    const shuffledPosts = posts.sort(() => 0.5 - Math.random());
-
-    return shuffledPosts;
-}
-
-module.exports = personalizedFeed, getRandomFeed;
+module.exports = generateFeed;

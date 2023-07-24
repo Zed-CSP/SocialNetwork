@@ -1,12 +1,12 @@
 const { User, Post, Comment, Like } = require('../models');
 const { signToken } = require('../utils/auth');
 const { AuthenticationError } = require('apollo-server-express'); // Make sure to import this.
-const personalizedFeed = require('../algorithms/feed_generator'); // Import the feed generator
 const AWS = require('aws-sdk'); // Required for direct S3 operations
 const { v4: uuidv4 } = require('uuid');  // for generating unique filenames
 // Use the already set-up s3 instance from your s3.js file
 const { GraphQLUpload } = require('graphql-upload');
 const moderateText = require('../utils/ai/moderateText');
+const generateFeed = require('../algorithms/feed_generator');
 
 
 const s3 = new AWS.S3({
@@ -37,7 +37,7 @@ const extractHashtags = (text) => {
   const result = [];
   let match;
   while ((match = regex.exec(text)) !== null) {
-      result.push(match[1]);
+    result.push(match[1]);
   }
   return result;
 };
@@ -45,99 +45,130 @@ const extractHashtags = (text) => {
 
 const resolvers = {
   Query: {
-    userFeed: async (_, __, context) => {
-      if (!context.user) {
-        throw new Error('Authentication required!');
-      }
-      return Post.find().populate('likes').populate({ path: 'likes.user' }).populate({ path: 'user' });
 
-    },
-    me: async (parent, args, context) => {
-      if (context.user) {
-        const userData = await User.findOne({ _id: context.user._id })
-          .select('-__v -password')
-          .populate('posts')
-          .populate('comments');
-        return userData;
+
+
+    // WORKS FOR NOW ISH
+    userFeed: async (_, { userId }, context) => {
+      if (!context.user) {
+          throw new Error('Authentication required!');
       }
-      throw new AuthenticationError('Not logged in');
-    },
-    users: async () => {
-      return User.find()
+      let feed = await generateFeed(userId);
+
+      console.log("feed:", feed[0]);
+  
+      return feed || [];  
+  },
+
+
+
+    me: async (parent, args, context) => {
+      if (!context.user) {
+        throw new AuthenticationError('Not logged in');
+      }
+      const userData = await User.findOne({ _id: context.user._id })
         .select('-__v -password')
         .populate('posts')
         .populate('comments');
+      return userData || null; // Handle potential null values
     },
-    user: async (parent, { username }) => {
-      return User.findOne({ username })
+    users: async () => {
+      const usersList = await User.find()
         .select('-__v -password')
         .populate('posts')
-        .populate('comments')
+        .populate('comments');
+      return usersList || []; // Ensure we return an empty array if there are no users
+    },
+    user: async (parent, { username }) => {
+      const user = await User.findOne({ username })
+        .select('-__v -password')
+        .populate('posts')
+        .populate('comments');
+      if (!user) {
+        throw new Error(`User with username ${username} not found!`);
+      }
+      return user;
     },
     post: async (parent, { _id }) => {
-      return Post.findById(_id)
-        .populate('likes')
-        .populate({ path: 'likes.user' })
-        .populate({ path: 'user' })
+      const post = await Post.findById(_id)
         .populate({
-          path: 'comments',      
+          path: 'likes',
+          match: { createdAt: { $exists: true } }
+        })
+        .populate('likes.user')
+        .populate('user')
+        .populate({
+          path: 'comments',
           populate: {
-            path: 'user',       
-            model: 'User'        
+            path: 'user',
+            model: 'User'
           }
         });
+
+      if (!post) {
+        throw new Error(`Post with ID ${_id} not found!`);
+      }
+
+      // Ensure each like and comment has necessary fields
+      post.likes = post.likes.filter(like => like.createdAt);
+      post.comments = post.comments.filter(comment => comment.content && comment.user);
+
+      return post;
     },
-  
     posts: async (parent, { username }) => {
       let query = {};
 
       if (username) {
         const user = await User.findOne({ username });
-        if (!user) throw new Error('User not found!');
+        if (!user) {
+          throw new Error(`User with username ${username} not found!`);
+        }
         query = { user: user._id };
       }
 
-      return Post.find(query)
-        .populate('likes')
+      const postsList = await Post.find(query)
+        .populate({
+          path: 'likes',
+          match: { createdAt: { $exists: true } }  // Only populate likes that have a createdAt
+        })
         .populate({ path: 'likes.user' })
         .populate({ path: 'user' })
         .populate({ path: 'comments' })  // Populating comments
         .populate({ path: 'comments.user' });  // Populating user of each comment
-    },
 
+      return postsList || []; // Ensure we return an empty array if there are no posts
+    },
+    comments: async (parent, { username }) => {
+      try {
+        // Find comments by the given username
+        const userComments = await Comment.find({ username: username });
+
+        console.log("userComments:", userComments);
+
+        return userComments || [];
+      } catch (error) {
+        throw new Error(`Failed to fetch comments for username: ${username}. Error: ${error.message}`);
+      }
+    },
+    likes: async (parent, { username }) => {
+      try {
+        // Find likes by the given username
+        const userLikes = await Like.find({ username: username });
+
+        return userLikes || [];
+      } catch (error) {
+        throw new Error(`Failed to fetch likes for username: ${username}. Error: ${error.message}`);
+      }
+    },
 
   },
   Upload: GraphQLUpload,
   Mutation: {
 
-    uploadAvatar: async (_, { avatar }, user) => {
-      // Check if the user is authenticated
-      if (!user) {
-        throw new AuthenticationError('You need to be logged in!');
-      }
 
-      if (!avatar) {
-        throw new Error('Please provide an image file.');
-      }
-
-      const { createReadStream, filename } = await avatar.file;
-      const fileStream = createReadStream();
-      const uniqueFilename = uuidv4() + '-' + filename; // Generate a unique name
-
-      try {
-        const avatarUrl = await uploadToS3(fileStream, uniqueFilename);
-        // Update the user's profile_picture field with the new URL
-        await User.findByIdAndUpdate(user._id, { profile_picture: avatarUrl });
-        return true;
-      } catch (error) {
-        console.error('Error uploading avatar:', error);
-        throw new Error('Error uploading avatar.');
-      }
-
-
-    },
 
     // WORKS FOR NOW DONT TOUCH
+
     addUser: async (parent, { username, email, password, date_of_birth }) => {
       const user = await User.create({ username, email, password, date_of_birth });
       const token = signToken(user);
@@ -168,7 +199,7 @@ const resolvers = {
 
       let photoUrl;
       if (context.user) {
-        
+
         const hashtags = extractHashtags(content);
         console.log("hashtags:", hashtags);
         const moderatedContent = await moderateText(content);
@@ -207,11 +238,11 @@ const resolvers = {
         console.log("context.user:", context.user._id);
 
         const post = await Post.create({
-          content, 
-          photo: photoUrl, 
+          content,
+          photo: photoUrl,
           user: context.user._id,
           hashtags // `hashtags: hashtags`
-      });
+        });
 
         console.log("Post created:", post);
 
@@ -221,8 +252,8 @@ const resolvers = {
           { new: true }
         );
         console.log("User updated");
-      return post;
-     } 
+        return post;
+      }
     },
     likePost: async (_, { postId }, context) => {
       if (!context.user) {
@@ -248,6 +279,17 @@ const resolvers = {
         .populate({ path: 'likes.user' })  // <-- this will populate the user for each like
         .populate({ path: 'user' }); // this populates the user of the post itself
 
+      if (updatedPost && updatedPost.hashtags && updatedPost.hashtags.length) {
+        // Add the post's hashtags to the user's interests
+        await User.findByIdAndUpdate(
+          context.user._id,
+          { $addToSet: { interests: { $each: updatedPost.hashtags } } }, // $addToSet ensures no duplicate entries
+          { new: true }
+        );
+
+        // need to log to see if hashtags are being added to user interests
+        console.log("updatedPost.hashtags:", updatedPost.hashtags);
+      }
 
       return updatedPost;
     },
@@ -261,15 +303,27 @@ const resolvers = {
         throw new Error('You haven\'t liked this post yet');
       }
 
-      const updatedPost = await Post.findByIdAndUpdate(
+      const updatedPost = await Post.findById(postId);
+
+      if (!updatedPost) {
+        throw new Error('Post not found');
+      }
+
+      // Remove the post's hashtags from the user's interests
+      await User.findByIdAndUpdate(
+        context.user._id,
+        { $pullAll: { interests: updatedPost.hashtags } },
+        { new: true }
+      );
+
+      // Update the likes on the post
+      await Post.findByIdAndUpdate(
         postId,
         { $pull: { likes: like._id } },
         { new: true }
       )
         .populate('likes')
         .populate({ path: 'likes.user' }); // <-- populate the user for each like
-
-
 
       return updatedPost;
     },
@@ -331,11 +385,6 @@ const resolvers = {
         throw new Error('There was an issue adding the comment. Please try again later.');
       }
     },
-
-
-
-
-
     deleteComment: async (_, { postId, commentId }, context) => {
       console.log("postId:", postId);
       console.log("commentId:", commentId);
@@ -361,8 +410,8 @@ const resolvers = {
 
       if (commentUserId !== currentUserId && postUserId !== currentUserId) {
         throw new AuthenticationError('You can only delete comments that you posted or on your own posts.');
-    }
-    
+      }
+
 
 
       await Comment.findByIdAndDelete(commentId);
@@ -385,8 +434,32 @@ const resolvers = {
 
 
 
+    uploadAvatar: async (_, { avatar }, user) => {
+      // Check if the user is authenticated
+      if (!user) {
+        throw new AuthenticationError('You need to be logged in!');
+      }
+
+      if (!avatar) {
+        throw new Error('Please provide an image file.');
+      }
+
+      const { createReadStream, filename } = await avatar.file;
+      const fileStream = createReadStream();
+      const uniqueFilename = uuidv4() + '-' + filename; // Generate a unique name
+
+      try {
+        const avatarUrl = await uploadToS3(fileStream, uniqueFilename);
+        // Update the user's profile_picture field with the new URL
+        await User.findByIdAndUpdate(user._id, { profile_picture: avatarUrl });
+        return true;
+      } catch (error) {
+        console.error('Error uploading avatar:', error);
+        throw new Error('Error uploading avatar.');
+      }
 
 
+    },
     deletePost: async (parent, { postId }, context) => {
       if (context.user) {
         const post = await Post.findByIdAndDelete({ _id: postId });
@@ -402,6 +475,7 @@ const resolvers = {
 
       throw new AuthenticationError('You need to be logged in!');
     },
+
   },
 };
 
