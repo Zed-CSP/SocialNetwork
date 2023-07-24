@@ -184,10 +184,10 @@ export default function PostCard({ post }) {
   const dynamicHeight = showComments
     ? post.photo
       ? '95vh' // comments and a photo
-      : '70vh' // comments but no photo
+      : '66vh' // comments but no photo
     : post.photo
-    ? '60vh' // no comments but there is a photo
-    : '30vh'; // no comments and no photo
+    ? '55vh' // no comments but there is a photo
+    : '25vh'; // no comments and no photo
 
 
   return (
