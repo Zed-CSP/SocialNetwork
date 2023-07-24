@@ -18,13 +18,21 @@ export function Register() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        
+        // check that all fields are filled out
+        if (!username || !email || !dateOfBirth || !password || !confirmPassword) {
+            console.error("All fields must be filled out");
+            return;
+        }
+    
+        // check that passwords match
         if (password !== confirmPassword) {
-            // Handle password mismatch
             console.error("Passwords do not match");
             return;
         }
         setTosModalOpen(true);
     };
+    
 
     const handleTosAccept = async () => {
         try {
