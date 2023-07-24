@@ -10,6 +10,7 @@ const checkForJackieChan = require('../utils/ai/moderateImage');
 const isItJackieChan = require('../utils/ai/isItJackieChan');
 const generateFeed = require('../algorithms/feed_generator');
 
+// const { createWriteStream } = require('fs');
 
 
 const s3 = new AWS.S3({
@@ -160,6 +161,7 @@ const resolvers = {
 
 
     },
+
     likes: async (parent, { username }) => {
 
       try {
@@ -171,6 +173,7 @@ const resolvers = {
         throw new Error(`Failed to fetch likes for username: ${username}. Error: ${error.message}`);
       }
     },
+    
 
   },
   Upload: GraphQLUpload,
@@ -412,6 +415,7 @@ const resolvers = {
         console.error('Error saving the comment:', error);
         throw new Error('There was an issue adding the comment. Please try again later.');
       }
+    },
 
     deleteComment: async (_, { postId, commentId }, context) => {
       console.log("postId:", postId);
@@ -456,7 +460,7 @@ const resolvers = {
 
       return updatedPost;
     },
-
+//=====================
     uploadAvatar: async (_, { avatar }, user) => {
       // Check if the user is authenticated
       if (!user) {
@@ -466,21 +470,35 @@ const resolvers = {
       if (!avatar) {
         throw new Error('Please provide an image file.');
       }
-
-      const { createReadStream, filename } = await avatar.file;
-      const fileStream = createReadStream();
-      const uniqueFilename = uuidv4() + '-' + filename; // Generate a unique name
-
+      const avatarDetails = await avatar;
+      
+      const fileStream = avatarDetails.createReadStream();
+      const uniqueFilename = uuidv4() + '-' + avatarDetails.filename; 
+      
       try {
         const avatarUrl = await uploadToS3(fileStream, uniqueFilename);
+        
+        console.log(avatarUrl);
+
         // Update the user's profile_picture field with the new URL
-        await User.findByIdAndUpdate(user._id, { profile_picture: avatarUrl });
+        // const updatedUser = 
+        await User.findOneAndUpdate({username: user.username}, { profile_picture: avatarUrl });
+        // await updatedUser.save();
+        console.log(avatarUrl);
+
+        console.log(user);
+
+        // user.profile_picture = avatarUrl;
+        
+
         return true;
       } catch (error) {
         console.error('Error uploading avatar:', error);
         throw new Error('Error uploading avatar.');
       }
     },
+//============================
+
     deletePost: async (parent, { postId }, context) => {
       if (context.user) {
         const post = await Post.findByIdAndDelete({ _id: postId });
