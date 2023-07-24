@@ -1,11 +1,15 @@
-const React = require("react");
-const { useState } = require('react');
-const Modal = require("@material-ui/core").Modal;
-const TosWeight = require("./content/TosWeight").TosWeight;
+import React, { useState, useEffect } from "react";
+import Modal from "@material-ui/core/Modal";
+import { TosWeight } from "./content/TosWeight";
+import './css/Tos.css'; // Include this to import the CSS styles
 
 export function Tos({ open, onAccept, onClose }) {
-    let agreeSize = '12px';
     const [isAgreed, setIsAgreed] = useState(false);
+    const [agreeSize, setAgreeSize] = useState('14px');
+    const [agreeMoving, setAgreeMoving] = useState(false);
+    const [agreeScale, setAgreeScale] = useState(1);
+    const [bounceCount, setBounceCount] = useState(0);
+    const [spin, setSpin] = useState(false);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -26,13 +30,30 @@ export function Tos({ open, onAccept, onClose }) {
     };
 
     const agreeSizeUp = () => {
-        agreeSize = agreeSize.slice(0, -2);
-        if (parseInt(agreeSize) < 40) {
-            agreeSize += 1;
+        let agreeSizer = parseInt(agreeSize.slice(0, -2));
+        if (agreeSizer < 80) {
+            agreeSizer += 6;
+            setAgreeSize(`${agreeSizer}px`);
+            setAgreeScale(agreeSizer / 12);
+            if (agreeSizer > 80) {
+                setAgreeMoving(true);
+            }
         }
-        agreeSize += 'px';
-    }
+    };
+    
+    useEffect(() => {
+        if (agreeMoving && bounceCount < 5) {
+            const interval = setInterval(() => {
+                setBounceCount(bounceCount + 1);
+            }, 2000);
 
+            return () => clearInterval(interval);
+        } else if (bounceCount === 5) {
+            setSpin(true);
+        }
+    }, [agreeMoving, bounceCount]);
+
+    
     return (
         <Modal
             open={open}
@@ -40,16 +61,35 @@ export function Tos({ open, onAccept, onClose }) {
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
         >
-            <div className="Reg">
+            <div style={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                width: '80vw',
+                height: '90vh',
+                backgroundColor: 'white',
+                padding: '20px',
+                overflowY: 'auto',
+            }}>
                 {TosWeight()}
-                <form onSubmit={handleSubmit}>
-                    <p style={{fontSize: agreeSize, paddingBottom: '5%'}}>I agree</p>
-                    <input type="checkbox" id="agree" name="agree" checked={isAgreed} onChange={handleAgreeChange} />
-                    <button type="submit">Submit</button>
+                <form onSubmit={handleSubmit} style={{display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%'}}>
+                    <div style={{position: 'relative', width: '100%', height: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                        <p className={spin ? 'spin' : agreeMoving ? 'move' : ''} style={{fontSize: agreeSize, position: 'absolute'}}>
+                            I agree,
+                        </p>
+                    </div>
+                    <div style={{alignSelf: 'flex-end', marginTop: '20px'}}>
+                        <input type="checkbox" id="agree" name="agree" checked={isAgreed} onChange={handleAgreeChange} style={{transform: `scale(${agreeScale})`}} /> 
+                        <br/><br/>
+                        <button type="submit" style={{marginTop: '10px'}}>Submit</button>
+                    </div>
                 </form>
             </div>
         </Modal>
     );
+
 }
 
 export default Tos;
+

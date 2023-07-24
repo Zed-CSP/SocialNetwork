@@ -1,0 +1,26 @@
+@keyframes spin {
+    0% { 
+        transform: translateX(0) rotate(0deg);
+    }
+    50% {
+        transform: translateX(-50%) rotate(180deg);
+    }
+    100% {
+        transform: translateX(0) rotate(360deg);
+    }
+}
+
+.spin {
+    animation: spin 2s linear infinite;
+    display: inline-block;
+}
+
+@keyframes move {
+    0% { transform: translateX(0); }
+    50% { transform: translateX(calc(100vw - 250)); }
+    100% { transform: translateX(0); }
+}
+
+.move {
+    animation: move 2s linear infinite;
+}
