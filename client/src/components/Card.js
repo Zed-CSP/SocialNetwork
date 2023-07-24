@@ -231,7 +231,7 @@ export default function PostCard({ post }) {
               {renderContentWithHashtags(post.content)}
             </Typography>
 
-
+    
             {/* <IconButton style={{ color: 'blue', borderRadius: '50%' }}>
               <ReadMoreTwoToneIcon />
             </IconButton> */}
