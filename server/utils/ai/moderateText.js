@@ -12,7 +12,7 @@ const moderateText = async (content) => {
         //#### Make Moderation request to the OpenAI API ##
         //################################################
         const response = await axios.post(
-            'https://api.openai.com/v1/moderations', // Update this to the correct moderation endpoint
+            'https://api.openai.com/v1/moderations',
             { input: content },
             { headers: { 'Authorization': `Bearer ${openaiApiKey}` } }
         );
