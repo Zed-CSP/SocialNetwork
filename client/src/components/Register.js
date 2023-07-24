@@ -32,7 +32,6 @@ export function Register() {
         }
         setTosModalOpen(true);
     };
-    
 
     const handleTosAccept = async () => {
         try {

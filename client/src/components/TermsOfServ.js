@@ -74,31 +74,31 @@ export function Tos({ open, onAccept, onClose }) {
                         <input type="checkbox" id="agree" name="agree" checked={isAgreed} onChange={handleAgreeChange} style={{transform: `scale(${agreeScale})`}} /> 
                         <br/><br/>
                         <button 
-    type="submit" 
-    style={{
-        marginTop: '10px', 
-        border: 'none', 
-        borderRadius: '5px',
-        padding: '10px 20px',
-        color: '#fff', 
-        fontSize: '16px',
-        background: 'linear-gradient(45deg, #4b6cb7 0%, #182848 100%)', 
-        boxShadow: '0 3px 5px 2px rgba(0, 0, 0, .3)', 
-        textTransform: 'uppercase', 
-        cursor: 'pointer', 
-        outline: 'none'
-    }}
-    onMouseDown={(e) => {
-        e.target.style.transform = 'scale(0.95)';
-        e.target.style.boxShadow = '0 2px 3px 1px rgba(0, 0, 0, .3)';
-    }}
-    onMouseUp={(e) => {
-        e.target.style.transform = 'scale(1)';
-        e.target.style.boxShadow = '0 3px 5px 2px rgba(0, 0, 0, .3)';
-    }}
->
-    Submit
-</button>
+                            type="submit" 
+                            style={{
+                                marginTop: '10px', 
+                                border: 'none', 
+                                borderRadius: '5px',
+                                padding: '10px 20px',
+                                color: '#fff', 
+                                fontSize: '16px',
+                                background: 'linear-gradient(45deg, #4b6cb7 0%, #182848 100%)', 
+                                boxShadow: '0 3px 5px 2px rgba(0, 0, 0, .3)', 
+                                textTransform: 'uppercase', 
+                                cursor: 'pointer', 
+                                outline: 'none'
+                            }}
+                            onMouseDown={(e) => {
+                                e.target.style.transform = 'scale(0.95)';
+                                e.target.style.boxShadow = '0 2px 3px 1px rgba(0, 0, 0, .3)';
+                            }}
+                            onMouseUp={(e) => {
+                                e.target.style.transform = 'scale(1)';
+                                e.target.style.boxShadow = '0 3px 5px 2px rgba(0, 0, 0, .3)';
+                            }}
+                        >
+                            Submit
+                        </button>
 
                     </div>
                 </form>
