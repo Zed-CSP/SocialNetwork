@@ -81,11 +81,51 @@ export const GET_USER = gql`
   }
 `;
 
+export const GET_PERSONALIZED_POSTS = gql`
+  query userFeed($userId: ID!) {
+    userFeed(userId: $userId) {
+      _id
+      content
+      photo
+      createdAt
+      user {
+        _id
+        username
+      }
+      likes {
+        _id
+        user {
+          _id
+          username
+        }
+        createdAt
+        post {
+
+          _id
+        }
+      }
+      comments {
+        _id
+        content
+        user {
+          _id
+          username
+        }
+        createdAt
+      }
+    }
+  }
+`;
+
+
+
+// move this later to mutations.js
 export const UPLOAD_AVATAR = gql`
   mutation uploadAvatar($avatar: Upload!) {
     uploadAvatar(avatar: $avatar)
   }
 `;
+
 
 export const GET_USER_PIC = gql`
 query GetUser($id: ID!) {
@@ -96,3 +136,4 @@ query GetUser($id: ID!) {
   }
 }
 `;
+

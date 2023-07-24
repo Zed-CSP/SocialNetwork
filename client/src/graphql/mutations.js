@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client';
+import { gql, useMutation } from '@apollo/client';
 
 export const ADD_USER = gql`
   mutation addUser($username: String!, $email: String!, $date_of_birth: String!, $password: String!) {
@@ -50,13 +50,13 @@ export const LIKE_POST = gql`
         user {
           _id
           username
+          interests
         }
       }
+      hashtags
     }
   }
 `;
-
-
 
 export const UNLIKE_POST = gql`
   mutation UnlikePost($postId: ID!) {
@@ -111,5 +111,9 @@ export const DELETE_COMMENT = gql`
   }
 `;
 
-
+const CHECK_IMAGE = gql`
+  mutation CheckImage($file: Upload!) {
+    checkImage(file: $file)
+  }
+`;
 

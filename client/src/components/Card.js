@@ -173,18 +173,26 @@ export default function PostCard({ post }) {
 
 
 
-  const handleLike = async (postId) => {
+const handleLike = async (postId) => {
     try {
-      await likePost({
-        variables: { postId },
-        update: (cache, { data: { likePost } }) => {
-          // Update the cache here based on the returned post data
-        }
-      });
+        await likePost({
+            variables: { postId },
+            update: (cache, { data: { likePost } }) => {
+                // After successfully liking a post, add its hashtags to user's interests
+                if(!post.hashtags) return; // Exit if post has no hashtags (nothing to add to user's interests
+                
+                const postHashtags = post.hashtags;
+                // Add only new hashtags
+                const newInterests = [...new Set([...currentUser.interests, ...postHashtags])];
+                currentUser.interests = newInterests;
+                // You might want to update this on the backend as well
+            }
+        });
     } catch (err) {
-      console.error("Error liking post:", err);
+        console.error("Error liking post:", err);
     }
-  };
+};
+
 
   const handleUnlike = async (postId) => {
     try {
