@@ -50,8 +50,10 @@ export const LIKE_POST = gql`
         user {
           _id
           username
+          interests
         }
       }
+      hashtags
     }
   }
 `;
