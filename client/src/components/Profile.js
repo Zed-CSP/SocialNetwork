@@ -82,13 +82,13 @@ const [avatarFile, setAvatarFile] = useState(null);
 
   return (
     <div className="Pro" style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center'  }}>
-      <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+      {/* <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
 
                   <Chip icon={<FavoriteTwoToneIcon/>} style={{marginRight: '20%', color: 'white', }} color='secondary'  label={hi}/>
                   <Chip icon={<ChatBubbleTwoToneIcon/>} style={{color: 'white'}} label={hi} color="primary"/>
                   <Chip icon={<CreateTwoToneIcon/>} style={{marginLeft: '20%', color: 'white'}} label={hi} color="success"/>
 
-      </div>
+      </div> */}
       <Box
         sx={{
           display: 'flex',
@@ -136,6 +136,13 @@ const [avatarFile, setAvatarFile] = useState(null);
           {posts.map((post) => (
             <PostCard key={post._id} post={post} likes={post.likes} />
           ))}
+          <div className="userContent" >
+
+          <div className='innerFeed' style={{ position: 'absolute', height: '70%', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', overflow: 'auto' }}>
+                
+            </div>
+
+          </div>
 
           </div>
         </Paper>
@@ -145,3 +152,8 @@ const [avatarFile, setAvatarFile] = useState(null);
 }
 
 export default Profile;
+
+
+{/* {posts.map(post => (
+                    <PostCard key={post._id} post={post} likes={post.likes} />
+                ))} */}
