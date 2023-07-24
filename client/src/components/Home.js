@@ -18,6 +18,8 @@ export default function Home() {
         variables: { userId: currentUserId }
     });
 
+    console.log(data)
+
     console.log("Error: ", error);
 
     console.log("Data in Home.js: ", data);
