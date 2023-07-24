@@ -6,9 +6,7 @@ async function generateFeed(userId) {
     let posts = [];
 
     if (user && user.interests.length > 0) {
-        posts = await Post.find({
-            hashtags: { $in: user.interests }
-        })
+        posts = await Post.find({ hashtags: { $in: user.interests } })
         .sort({ createdAt: -1 })
         .limit(20)
         .populate('likes')
@@ -17,8 +15,8 @@ async function generateFeed(userId) {
         .populate({
             path: 'comments',
             populate: {
-              path: 'user',
-              model: 'User'
+                path: 'user',
+                model: 'User'
             }
         })
         .exec();
@@ -27,7 +25,7 @@ async function generateFeed(userId) {
     if (posts.length < 10) {
         const randomPosts = await Post.aggregate([{ $sample: { size: 10 - posts.length } }]);
         const randomPostIds = randomPosts.map(post => post._id);
-        const populatedRandomPosts = await Post.find({_id: {$in: randomPostIds}})
+        const populatedRandomPosts = await Post.find({ _id: { $in: randomPostIds } })
             .populate('likes')
             .populate({ path: 'likes.user' })
             .populate({ path: 'user' })
@@ -39,11 +37,12 @@ async function generateFeed(userId) {
                 }
             })
             .exec();
-    
+
         posts = [...posts, ...populatedRandomPosts];
     }
-    
+
     return posts;
 }
+
 
 module.exports = generateFeed;

@@ -43,8 +43,8 @@ const typeDefs = gql`
   type Like {
     _id: ID!
     user: User
-    post: Post
-    createdAt: String
+    post: Post!
+    createdAt: String!
   }
 
 
@@ -62,6 +62,7 @@ type Query {
   post(_id: ID!): Post
   comments(postId: ID!): [Comment]
   likes(postId: ID!): [Like]
+  like(postId: ID!): Like
 }
 
 type Mutation {
