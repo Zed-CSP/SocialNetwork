@@ -2,7 +2,7 @@ const { gql } = require('apollo-server-express');
 
 
 
-  const typeDefs = gql`
+const typeDefs = gql`
 
   scalar Upload
 
@@ -11,6 +11,7 @@ const { gql } = require('apollo-server-express');
     username: String
     email: String!
     date_of_birth: String!
+    interests: [String]
     posts: [Post]
     comments: [Comment]
     likes: [Like]
@@ -42,8 +43,8 @@ const { gql } = require('apollo-server-express');
     _id: ID!
     user: User
     post: Post
-    createdAt: String!
-}
+    createdAt: String
+  }
 
 
 type Auth {
@@ -52,12 +53,14 @@ type Auth {
 }
 
 type Query {
-  userFeed: [Post]
+  userFeed(userId: ID!): [Post!]!
   me: User
   users: [User]
   user(username: String!): User
   posts(username: String): [Post]
   post(_id: ID!): Post
+  comments(postId: ID!): [Comment]
+  likes(postId: ID!): [Like]
 }
 
 type Mutation {
