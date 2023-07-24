@@ -5,6 +5,7 @@ import { useMutation } from '@apollo/client';
 import { ADD_USER } from '../graphql/mutations';
 import { useState } from 'react';
 import './css/HC.css'
+import Tos from './TermsOfServ.js';
 
 export function Register() {
     const [addUser] = useMutation(ADD_USER);
@@ -13,7 +14,7 @@ export function Register() {
     const [dateOfBirth, setDateOfBirth] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-
+    const [tosModalOpen, setTosModalOpen] = useState(false);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -22,6 +23,10 @@ export function Register() {
             console.error("Passwords do not match");
             return;
         }
+        setTosModalOpen(true);
+    };
+
+    const handleTosAccept = async () => {
         try {
             const { data } = await addUser({
                 variables: { username, email, date_of_birth: dateOfBirth, password },
@@ -36,16 +41,16 @@ export function Register() {
             } else {
                 console.error("Registration successful but no token received");
             }
-            
-            // Handle successful registration (e.g. redirect to login page)
-            window.location.replace("/home");
         } catch (err) {
             // Handle error (e.g. show error message)
             console.error(err);
         }
     };
-    
 
+    const handleTosClose = () => {
+        setTosModalOpen(false);
+    };
+    
     return (
         <div className="Reg">
             <Box 
@@ -73,6 +78,7 @@ export function Register() {
                 
                 </form>
                 
+                <Tos open={tosModalOpen} onAccept={handleTosAccept} onClose={handleTosClose} />
             </Box>
         </div>
     );
