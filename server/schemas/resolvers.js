@@ -32,6 +32,17 @@ const uploadToS3 = async (fileStream, filename) => {
   });
 };
 
+const extractHashtags = (text) => {
+  const regex = /#(\w+)/g;
+  const result = [];
+  let match;
+  while ((match = regex.exec(text)) !== null) {
+      result.push(match[1]);
+  }
+  return result;
+};
+
+
 const resolvers = {
   Query: {
     userFeed: async (_, __, context) => {
@@ -157,8 +168,9 @@ const resolvers = {
 
       let photoUrl;
       if (context.user) {
-        console.log(content);
-
+        
+        const hashtags = extractHashtags(content);
+        console.log("hashtags:", hashtags);
         const moderatedContent = await moderateText(content);
 
         if (moderatedContent === "0") {
@@ -194,7 +206,12 @@ const resolvers = {
 
         console.log("context.user:", context.user._id);
 
-        const post = await Post.create({ content, photo: photoUrl, user: context.user._id });
+        const post = await Post.create({
+          content, 
+          photo: photoUrl, 
+          user: context.user._id,
+          hashtags // `hashtags: hashtags`
+      });
 
         console.log("Post created:", post);
 

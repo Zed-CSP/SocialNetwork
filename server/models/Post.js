@@ -35,6 +35,9 @@ const postSchema = new Schema({
   }
 });
 
+postSchema.index({ hashtags: 1 });
+
+
 const Post = model('Post', postSchema);
 
 module.exports = Post;

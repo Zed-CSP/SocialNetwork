@@ -126,15 +126,15 @@ export default function PostCard({ post }) {
             variables: { id: postId },
           });
 
-       console.log("success maybe?")   
+          console.log("success maybe?")
 
-       
+
 
           if (!existingPostData || !existingPostData.post) {
             return; // Exit if post data is not in the cache
           }
 
-      
+
 
           const updatedComments = existingPostData.post.comments.filter(comment => comment._id !== commentId);
           cache.writeQuery({
@@ -150,6 +150,24 @@ export default function PostCard({ post }) {
       console.error("Error deleting comment:", err);
     }
   };
+
+  function renderContentWithHashtags(content) {
+    // Split the content by spaces to check each word
+    const words = content.split(/\s+/);
+
+    // Convert words to JSX elements, highlighting hashtags
+    return words.map((word, index) => {
+      if (word.startsWith("#")) {
+        return <span key={index} style={{ color: 'blue' }}>{word}</span>;
+      }
+      return word;
+    }).reduce((acc, word, index) => {
+      if (index !== 0) acc.push(" "); // Add space between words
+      acc.push(word);
+      return acc;
+    }, []);
+  }
+
 
 
 
@@ -217,9 +235,10 @@ export default function PostCard({ post }) {
             </Typography>
 
             <Typography variant="body2" color="text.secondary">
-              {post.content}
+              {renderContentWithHashtags(post.content)}
             </Typography>
 
+    
             {/* <IconButton style={{ color: 'blue', borderRadius: '50%' }}>
               <ReadMoreTwoToneIcon />
             </IconButton> */}
