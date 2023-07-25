@@ -255,8 +255,10 @@ const resolvers = {
         console.log("hashtags:", hashtags);
 
         const aboutJackieChan = await isItJackieChan(content);
-        console.log("aboutJackieChan:", aboutJackieChan);
-        if (aboutJackieChan === "1") {
+        
+        console.log("aboutJackieChan right after in res:", aboutJackieChan);
+
+        if (aboutJackieChan.containsJackieChan) {
           throw new Error('Jackie Chan is not allowed in posts.');
           return;
         }
@@ -271,7 +273,6 @@ const resolvers = {
 
         // Handle the photo upload if it exists
         if (photo) {
-
 
           const photoDetails = await photo;
           console.log("photoDetails:", photoDetails);
@@ -302,7 +303,6 @@ const resolvers = {
           }
         }
 
-        console.log("context.user:", context.user._id);
 
         const post = await Post.create({
           content,
@@ -310,8 +310,6 @@ const resolvers = {
           user: context.user._id,
           hashtags // `hashtags: hashtags`
         });
-
-
 
         await User.findByIdAndUpdate(
           { _id: context.user._id },
