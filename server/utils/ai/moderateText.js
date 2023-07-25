@@ -6,6 +6,7 @@ const openaiApiKey = process.env.OPENAI_API_KEY;
 const moderateText = async (content) => {
     console.log('Checking content moderation...');
     console.log('Content to be moderated:', content);
+
     
     try {
         //##################################################
