@@ -7,6 +7,7 @@ const jwt = require('jsonwebtoken');
 const User = require('./models/User');
 require('dotenv').config();
 const { graphqlUploadExpress } = require('graphql-upload');
+const cors = require('cors');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -87,7 +88,7 @@ const server = new ApolloServer({
       res.sendFile(path.resolve(__dirname, '../client', 'build', 'index.html'));
     });
   }
-         
+            
 
   // Global error handler
   app.use((err, req, res, next) => {
