@@ -12,6 +12,7 @@ async function generateFeed(userId) {
         .populate('likes')
         .populate({ path: 'likes.user' })
         .populate({ path: 'user' })
+        .populate({ path: 'user.profile_picture' })
         .populate({
             path: 'comments',
             populate: {
@@ -29,6 +30,7 @@ async function generateFeed(userId) {
             .populate('likes')
             .populate({ path: 'likes.user' })
             .populate({ path: 'user' })
+            .populate({ path: 'user.profile_picture' })
             .populate({
                 path: 'comments',
                 populate: {

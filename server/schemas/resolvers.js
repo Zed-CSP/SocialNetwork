@@ -308,6 +308,7 @@ const resolvers = {
           content,
           photo: photoUrl,
           user: context.user._id,
+          profile_picture: context.user.profile_picture,
           hashtags // `hashtags: hashtags`
         });
 

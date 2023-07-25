@@ -12,6 +12,9 @@ const postSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'User'
   },
+  profile_picture: {
+    type: String
+  },
   volume: {
     type: Number,
     default: 0

@@ -24,6 +24,7 @@ const typeDefs = gql`
     content: String!
     photo: String
     user: User
+    profile_picture: String
     volume: Int!
     likes: [Like]
     comments: [Comment]
