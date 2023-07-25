@@ -1,0 +1,16 @@
+{
+  "name": "socialnetwork-fullstack",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "scripts": {
+    "server": "cd server && npm start",
+    "client": "cd client && npm start",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "install-deps": "npm install && cd server && npm install && cd ../client && npm install",
+    "heroku-postbuild": "cd server && npm run heroku-postbuild"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.0"
+  }
+}
