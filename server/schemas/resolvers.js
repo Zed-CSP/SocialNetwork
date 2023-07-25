@@ -256,9 +256,9 @@ const resolvers = {
 
         const aboutJackieChan = await isItJackieChan(content);
         console.log("aboutJackieChan:", aboutJackieChan);
-        if (aboutJackieChan === "1") {
-          throw new Error('Jackie Chan is not allowed in posts.');
-          return;
+        if (aboutJackieChan) {
+          console.log("ALARM ALARM");
+          throw new Error(aboutJackieChan);
         }
 
         const moderatedContent = await moderateText(content);

@@ -32,18 +32,19 @@ const isItJackieChan = async (content) => {
             },
             { headers: { 'Authorization': `Bearer ${openaiApiKey}` } }
         );
-        // console.log('API Response:', JSON.stringify(gptResponse.data));
 
         const content = gptResponse.data.choices[0].message.content;
-        const isItJackieChan = content.startsWith("1");
+        console.log('Content:', content);
+        itIsJackieChan = content.startsWith("1");
+        console.log('It is Jackie Chan:', itIsJackieChan);
         
-        if (isItJackieChan) {
+        if (itIsJackieChan) {
             const jackieChanMessage = content.slice(2);
             console.log('Content is about Jackie Chan: ', jackieChanMessage);
-            return '1', itIsJackieChan; // Shouldn't be posted
+            return jackieChanMessage
         } else {
             console.log('Content is not about Jackie Chan');
-            return '0'; // Should be posted
+            return false; // Should be posted
         }
 
     } catch (error) {
