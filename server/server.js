@@ -7,25 +7,33 @@ const jwt = require('jsonwebtoken');
 const User = require('./models/User');
 require('dotenv').config();
 const { graphqlUploadExpress } = require('graphql-upload');
+const cors = require('cors');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 const jwtSecret = process.env.JWT_SECRET;
+
+// Set up CORS with options
+app.use(cors({
+  origin: ['https://social-space-615b764ada9e.herokuapp.com'], // allow only this origin to make requests
+  credentials: true,
+  methods: ["GET", "POST"],
+}));
 
 const getUserFromToken = async (token) => {
   if (!token) {
     console.log("Token not provided");
     return null;
   }
-        //super 
+  //super 
   try {
     if (token.startsWith('Bearer ')) {
       token = token.slice(7, token.length).trimLeft();
     }
 
-   
+
     const { data } = jwt.verify(token, jwtSecret);
-  
+
 
     const user = await User.findById(data._id);
 
@@ -48,11 +56,11 @@ const server = new ApolloServer({
   uploads: false
 });
 
-(async function() {
+(async function () {
   await server.start();
 
   app.use((req, res, next) => {
-    
+
     if (req.is('text/*')) {
       req.text().then(txt => {
         console.log('Request body:', txt);
@@ -62,24 +70,25 @@ const server = new ApolloServer({
       next();
     }
   });
-  
-  
+
+
   app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+  app.use(express.json());
 
-// Add middleware for handling uploads
-app.use(graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }));
+  // Add middleware for handling uploads
+  app.use(graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }));
 
 
-  // Apollo middleware
-  server.applyMiddleware({ app });
+  server.applyMiddleware({ app, cors: false });
+  
 
   if (process.env.NODE_ENV === 'production') {
-    app.use(express.static(path.join(__dirname, '../client/build')));
+    app.use(express.static('../client/build'));
     app.get('*', (req, res) => {
-      res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
+      res.sendFile(path.resolve(__dirname, '../client', 'build', 'index.html'));
     });
   }
+            
 
   // Global error handler
   app.use((err, req, res, next) => {
@@ -92,4 +101,3 @@ app.use(graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }));
     console.log(`Use GraphQL at http://localhost:${PORT}${server.graphqlPath}`);
   });
 })();
- 

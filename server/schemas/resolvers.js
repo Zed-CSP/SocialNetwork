@@ -272,7 +272,6 @@ const resolvers = {
         // Handle the photo upload if it exists
         if (photo) {
 
-
           const photoDetails = await photo;
           console.log("photoDetails:", photoDetails);
 
@@ -302,7 +301,6 @@ const resolvers = {
           }
         }
 
-        console.log("context.user:", context.user._id);
 
         const post = await Post.create({
           content,
@@ -310,8 +308,6 @@ const resolvers = {
           user: context.user._id,
           hashtags // `hashtags: hashtags`
         });
-
-
 
         await User.findByIdAndUpdate(
           { _id: context.user._id },
