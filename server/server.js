@@ -87,7 +87,7 @@ const server = new ApolloServer({
       res.sendFile(path.resolve(__dirname, '../client', 'build', 'index.html'));
     });
   }
-
+         
 
   // Global error handler
   app.use((err, req, res, next) => {
