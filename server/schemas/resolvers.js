@@ -7,8 +7,9 @@ const { v4: uuidv4 } = require('uuid');  // for generating unique filenames
 const { GraphQLUpload } = require('graphql-upload');
 const moderateText = require('../utils/ai/moderateText');
 const moderateImage = require('../utils/ai/moderateImage');
-const isItJackieChan = require('../utils/ai/isItJackieChan');
+// const isItJackieChan = require('../utils/ai/isItJackieChan');
 const generateFeed = require('../algorithms/feed_generator');
+require('dotenv').config();
 
 // const { createWriteStream } = require('fs');
 
@@ -254,14 +255,14 @@ const resolvers = {
         const hashtags = extractHashtags(content);
         console.log("hashtags:", hashtags);
 
-        const aboutJackieChan = await isItJackieChan(content);
+        // const aboutJackieChan = await isItJackieChan(content);
         
-        console.log("aboutJackieChan right after in res:", aboutJackieChan);
+        // console.log("aboutJackieChan right after in res:", aboutJackieChan);
 
-        if (aboutJackieChan.containsJackieChan) {
-          throw new Error('Jackie Chan is not allowed in posts.');
-          return;
-        }
+        // if (aboutJackieChan) {
+        //   throw new Error('Jackie Chan is not allowed in posts.');
+        //   return;
+        // }
 
         const moderatedContent = await moderateText(content);
 
@@ -275,7 +276,7 @@ const resolvers = {
         if (photo) {
 
           const photoDetails = await photo;
-          console.log("photoDetails:", photoDetails);
+         
 
           // Check if createReadStream exists in photoDetails, and if it's a function
           if (typeof photoDetails.createReadStream !== "function") {
@@ -335,16 +336,16 @@ const resolvers = {
 
 
 
-    checkImage: async (_, { file }) => {
-      const { createReadStream } = await file;
-      const chunks = [];
-      for await (let chunk of createReadStream()) {
-        chunks.push(chunk);
-      }
-      const buffer = Buffer.concat(chunks);
-      return await checkForJackieChan(buffer);
+    // checkImage: async (_, { file }) => {
+    //   const { createReadStream } = await file;
+    //   const chunks = [];
+    //   for await (let chunk of createReadStream()) {
+    //     chunks.push(chunk);
+    //   }
+    //   const buffer = Buffer.concat(chunks);
+    //   return await checkForJackieChan(buffer);
 
-    },
+    // },
 
 
 

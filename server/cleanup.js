@@ -19,7 +19,7 @@ connection.once('open', async () => {
     const Post = require('./models/Post');
     const Like = require('./models/Like');
     const Comment = require('./models/Comment');
-    // const User = require('./models/User');
+    const User = require('./models/User');
 
     // Remove all posts
     await Post.deleteMany({});
@@ -34,8 +34,8 @@ connection.once('open', async () => {
     console.log('All comments removed successfully');
 
     // Remove all users
-    // await User.deleteMany({});
-    // console.log('All users removed successfully');
+    await User.deleteMany({});
+    console.log('All users removed successfully');
 
     connection.close();
     process.exit(0); // Exit normally

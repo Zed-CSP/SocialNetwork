@@ -8,7 +8,6 @@ const User = require('./models/User');
 require('dotenv').config();
 const { graphqlUploadExpress } = require('graphql-upload');
 const cors = require('cors');
-
 const app = express();
 const PORT = process.env.PORT || 3001;
 const jwtSecret = process.env.JWT_SECRET;
@@ -80,7 +79,7 @@ const server = new ApolloServer({
 
 
   server.applyMiddleware({ app, cors: false });
-  
+
 
   if (process.env.NODE_ENV === 'production') {
     app.use(express.static('../client/build'));
@@ -88,7 +87,7 @@ const server = new ApolloServer({
       res.sendFile(path.resolve(__dirname, '../client', 'build', 'index.html'));
     });
   }
-            
+
 
   // Global error handler
   app.use((err, req, res, next) => {
