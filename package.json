@@ -11,7 +11,7 @@
     "heroku-postbuild": "cd server && npm install --legacy-peer-deps && npm run heroku-postbuild"
   },
   "devDependencies": {
-    "concurrently": "^8.2.0"
+    "concurrently": "^8.2.0"  
   }
 }
    

@@ -11,7 +11,7 @@ const cors = require('cors');
 const app = express();
 const PORT = process.env.PORT || 3001;
 const jwtSecret = process.env.JWT_SECRET;
-
+     
 // Set up CORS with options
 app.use(cors({
   origin: ['https://social-space-615b764ada9e.herokuapp.com'], // allow only this origin to make requests

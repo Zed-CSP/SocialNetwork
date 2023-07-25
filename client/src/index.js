@@ -28,7 +28,7 @@ const client = new ApolloClient({
     link: authLink.concat(uploadLink),
     cache: new InMemoryCache(),
 });
-
+    // Start the server
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <ApolloProvider client={client}>
