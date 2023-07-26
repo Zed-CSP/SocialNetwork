@@ -50,7 +50,7 @@
 ---
 
 ## Contributors
-  [Christopher Peret](https://github.com/Zed-CSP), [Sam Jones](https://github.com/ParticularSpace), [Al Wesson][(https://github.com/AlWesson)
+  [Christopher Peret](https://github.com/Zed-CSP), [Sam Jones](https://github.com/ParticularSpace), [Al Wesson](https://github.com/AlWesson)
 ---
 
 ## Credits
