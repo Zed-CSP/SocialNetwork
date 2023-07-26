@@ -19,6 +19,7 @@
   
 ## Installation
  Deployed! No installation necessary.
+ [Here](https://social-space-615b764ada9e.herokuapp.com/login)
   
   ---
   
@@ -36,11 +37,15 @@
   * Apollo Server
   * GraphQL
   * Material UI
+---
+## Demo
+
+
 
 ---
 
 ## Contributors
-  [Christopher Peret](https://github.com/Zed-CSP), [Sam Jones](https://github.com/ParticularSpace)), [Al Wesson][(https://github.com/AlWesson), 
+  [Christopher Peret](https://github.com/Zed-CSP), [Sam Jones](https://github.com/ParticularSpace), [Al Wesson][(https://github.com/AlWesson)
 ---
 
 ## Credits
